@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>استوديو التعليق الصوتي بالدارجة المغربية</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Tajawal', 'sans-serif'],
+          },
+          colors: {
+            studio: {
+              50: '#f4f7fb',
+              100: '#e5edf5',
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#090d16',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background-color: #090d16;
+      color: #f1f5f9;
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between custom-scrollbar">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center space-x-3 space-x-reverse">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+          <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold bg-gradient-to-r from-white via-slate-200 to-emerald-400 bg-clip-text text-transparent">
+            استوديو التعليق الصوتي
+          </h1>
+          <p class="text-xs text-slate-400">الدارجة المغربية الاحترافية • الذكاء الاصطناعي</p>
+        </div>
+      </div>
+      
+      <div class="hidden md:flex items-center space-x-3 space-x-reverse text-xs text-slate-400">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-1.5"></span>
+          صوت نقي وبدون شوشرة HD
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Left Column: Controls & Text Input -->
+      <div class="lg:col-span-7 space-y-6">
+        
+        <!-- Script Input Section -->
+        <div class="glass-card rounded-2xl p-6 shadow-xl">
+          <div class="flex items-center justify-between mb-4">
+            <label for="script-text" class="text-lg font-bold text-white flex items-center">
+              <svg class="w-5 h-5 text-emerald-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+              نص السكريبت بالدارجة
+            </label>
+            <div class="flex items-center space-x-2 space-x-reverse">
+              <button id="polish-btn" onclick="polishScriptWithAI()" class="text-xs bg-slate-800 hover:bg-slate-700 text-teal-300 hover:text-teal-200 px-3 py-1.5 rounded-lg border border-teal-500/30 transition flex items-center">
+                <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                تحسين السكريبت للدارجة
+              </button>
+              <span id="char-count" class="text-xs text-slate-500">0 حرف</span>
+            </div>
+          </div>
+
+          <textarea id="script-text" rows="7" 
+            placeholder="اكتب أو ألصق السكريبت بالدارجة المغربية هنا...&#10;مثال: مرحباً بيكم! اليوم غادي نتعرفو على أفضل أسلوب لتقديم المحتوى الرقمي بأسلوب سلس واحترافي..." 
+            class="w-full bg-slate-900/90 text-slate-100 rounded-xl p-4 border border-slate-700/80 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition resize-none placeholder-slate-600 text-base leading-relaxed"
+            oninput="updateCharCount()"></textarea>
+
+          <!-- Quick Sample Scripts -->
+          <div class="mt-4 pt-3 border-t border-slate-800 flex flex-wrap items-center gap-2">
+            <span class="text-xs text-slate-400 ml-1">نماذج سريعة:</span>
+            <button onclick="loadPreset('commercial')" class="text-xs bg-slate-800/80 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md transition">إعلان تجاري</button>
+            <button onclick="loadPreset('corporate')" class="text-xs bg-slate-800/80 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md transition">تقديم شركة</button>
+            <button onclick="loadPreset('documentary')" class="text-xs bg-slate-800/80 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md transition">وثائقي / حكائي</button>
+            <button onclick="loadPreset('social')" class="text-xs bg-slate-800/80 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md transition">محتوى السوشيال ميديا</button>
+          </div>
+        </div>
+
+        <!-- Voice & Performance Settings -->
+        <div class="glass-card rounded-2xl p-6 shadow-xl space-y-6">
+          <h2 class="text-lg font-bold text-white flex items-center border-b border-slate-800 pb-3">
+            <svg class="w-5 h-5 text-emerald-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+            </svg>
+            إعدادات المعلق والصوت
+          </h2>
+
+          <!-- Speaker Selection Grid -->
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-3">اختر المعلق الصوتي:</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="voice-options">
+              
+              <!-- Voice 1: Male Adult Warm/Deep -->
+              <label class="relative flex items-center p-3.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-emerald-500/60 cursor-pointer transition group">
+                <input type="radio" name="voice" value="Fenrir" class="sr-only peer" checked>
+                <div class="w-4 h-4 rounded-full border border-slate-500 peer-checked:border-emerald-400 peer-checked:bg-emerald-400 flex-shrink-0 ml-3 transition"></div>
+                <div class="flex-grow">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-white group-hover:text-emerald-300 transition">ياسين (Fenrir)</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">رجالي • عميق</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-0.5">صوت رجالي بالغ، وقار وحاد للإعلانات والوثائقيات</p>
+                </div>
+                <div class="absolute inset-0 rounded-xl border-2 border-emerald-500 opacity-0 peer-checked:opacity-100 pointer-events-none transition"></div>
+              </label>
+
+              <!-- Voice 2: Male Deep Narrative -->
+              <label class="relative flex items-center p-3.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-emerald-500/60 cursor-pointer transition group">
+                <input type="radio" name="voice" value="Charon" class="sr-only peer">
+                <div class="w-4 h-4 rounded-full border border-slate-500 peer-checked:border-emerald-400 peer-checked:bg-emerald-400 flex-shrink-0 ml-3 transition"></div>
+                <div class="flex-grow">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-white group-hover:text-emerald-300 transition">فؤاد (Charon)</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">رجالي • فخم</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-0.5">صوت رجالي دافئ وفخم للسرد والقصص والتقارير</p>
+                </div>
+                <div class="absolute inset-0 rounded-xl border-2 border-emerald-500 opacity-0 peer-checked:opacity-100 pointer-events-none transition"></div>
+              </label>
+
+              <!-- Voice 3: Male Professional Corporate -->
+              <label class="relative flex items-center p-3.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-emerald-500/60 cursor-pointer transition group">
+                <input type="radio" name="voice" value="Orus" class="sr-only peer">
+                <div class="w-4 h-4 rounded-full border border-slate-500 peer-checked:border-emerald-400 peer-checked:bg-emerald-400 flex-shrink-0 ml-3 transition"></div>
+                <div class="flex-grow">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-white group-hover:text-emerald-300 transition">أميد (Orus)</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">رجالي • رسمي</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-0.5">صوت رجالي احترافي ومباشر للشركات والعروض</p>
+                </div>
+                <div class="absolute inset-0 rounded-xl border-2 border-emerald-500 opacity-0 peer-checked:opacity-100 pointer-events-none transition"></div>
+              </label>
+
+              <!-- Voice 4: Female Warm Adult -->
+              <label class="relative flex items-center p-3.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-emerald-500/60 cursor-pointer transition group">
+                <input type="radio" name="voice" value="Kore" class="sr-only peer">
+                <div class="w-4 h-4 rounded-full border border-slate-500 peer-checked:border-emerald-400 peer-checked:bg-emerald-400 flex-shrink-0 ml-3 transition"></div>
+                <div class="flex-grow">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-white group-hover:text-emerald-300 transition">مريم (Kore)</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-pink-500/20 text-pink-300 border border-pink-500/30">نسائي • دافئ</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-0.5">صوت نسائي بالغ، دافئ ومريح للسرد والتوعية</p>
+                </div>
+                <div class="absolute inset-0 rounded-xl border-2 border-emerald-500 opacity-0 peer-checked:opacity-100 pointer-events-none transition"></div>
+              </label>
+
+            </div>
+          </div>
+
+          <!-- Tone & Delivery Directives -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="tone-select" class="block text-sm font-medium text-slate-300 mb-2">أسلوب الأداء والإلقاء:</label>
+              <select id="tone-select" class="w-full bg-slate-900 text-slate-200 border border-slate-700 rounded-xl p-3 focus:border-emerald-500 focus:ring-emerald-500 text-sm">
+                <option value="احترافي متوازن بدارجة مغربية ناصعة">احترافي متوازن (Professional)</option>
+                <option value="حماسي ومشجع للإعلانات والتسويق">حماسي وإعلاني (Commercial)</option>
+                <option value="هادئ ورزين بأسلوب الوثائقيات">هادئ ورزين (Documentary)</option>
+                <option value="دافئ وقريب من القلب بأسلوب الحكواتي">حكائي ودافئ (Storytelling)</option>
+                <option value="رسمي ومباشر للشركات والتقارير">رسمي للشركات (Corporate)</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="pacing-select" class="block text-sm font-medium text-slate-300 mb-2">سرعة النطق والتنفس:</label>
+              <select id="pacing-select" class="w-full bg-slate-900 text-slate-200 border border-slate-700 rounded-xl p-3 focus:border-emerald-500 focus:ring-emerald-500 text-sm">
+                <option value="إيقاع طبيعي ومعتدل مع وقف قصيرة للتنفس">طبيعي ومعتدل</option>
+                <option value="إيقاع هادئ وبطيء مع ترك مسافة بين الجمل">بطيء ورزين</option>
+                <option value="إيقاع ديناميكي وسريع">سريع وحماسي</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Generate Button -->
+          <button id="generate-btn" onclick="generateAudio()" class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 hover:from-emerald-400 hover:via-teal-400 hover:to-cyan-500 text-slate-950 font-extrabold text-lg shadow-lg shadow-emerald-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center space-x-2 space-x-reverse">
+            <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>إنشاء التعليق الصوتي الآن</span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Right Column: Output & Audio Player & History -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <!-- Status & Player Container -->
+        <div class="glass-card rounded-2xl p-6 shadow-xl relative overflow-hidden min-h-[320px] flex flex-col justify-between">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center justify-between border-b border-slate-800 pb-3">
+              <span class="flex items-center">
+                <svg class="w-5 h-5 text-emerald-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                </svg>
+                النتيجة ومعالجة الصوت
+              </span>
+              <span id="player-badge" class="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400">في الانتظار</span>
+            </h2>
+
+            <!-- Loading State -->
+            <div id="loading-state" class="hidden my-12 text-center space-y-4">
+              <div class="relative w-20 h-20 mx-auto">
+                <div class="absolute inset-0 rounded-full border-4 border-emerald-500/20 animate-ping"></div>
+                <div class="w-20 h-20 rounded-full border-4 border-t-emerald-400 border-r-teal-500 border-b-cyan-500 border-l-transparent animate-spin flex items-center justify-center">
+                  <svg class="w-8 h-8 text-emerald-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="space-y-1">
+                <p class="text-white font-bold text-base">جاري توليد التعليق الصوتي بلهجة الدارجة...</p>
+                <p id="loading-step" class="text-xs text-slate-400">معالجة النص وضبط النبرة والمخارج</p>
+              </div>
+            </div>
+
+            <!-- Empty Placeholder -->
+            <div id="empty-state" class="my-12 text-center space-y-3">
+              <div class="w-16 h-16 rounded-full bg-slate-900 border border-slate-800 mx-auto flex items-center justify-center text-slate-600">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                </svg>
+              </div>
+              <p class="text-slate-400 text-sm">أدخل السكريبت ثم اضغط على "إنشاء التعليق الصوتي" للاستماع للنتيجة</p>
+            </div>
+
+            <!-- Audio Player View -->
+            <div id="active-player" class="hidden my-6 space-y-6">
+              
+              <!-- Waveform Visual Effect -->
+              <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 flex flex-col items-center justify-center relative">
+                <div class="flex items-center justify-center space-x-1.5 space-x-reverse h-16 w-full" id="waveform-bars">
+                  <!-- Bars inserted via JS -->
+                </div>
+                <div class="mt-4 flex items-center justify-between w-full text-xs text-slate-400 font-mono">
+                  <span id="current-time">00:00</span>
+                  <span id="total-duration">00:00</span>
+                </div>
+              </div>
+
+              <!-- Main Native Audio Control Hidden -->
+              <audio id="main-audio" class="hidden"></audio>
+
+              <!-- Controls Bar -->
+              <div class="flex items-center justify-between bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                <button id="play-pause-btn" onclick="togglePlayPause()" class="w-12 h-12 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 flex items-center justify-center shadow-lg transition">
+                  <svg id="play-icon" class="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                  <svg id="pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                  </svg>
+                </button>
+
+                <!-- Audio Speed Selector -->
+                <div class="flex items-center space-x-2 space-x-reverse text-xs text-slate-400">
+                  <span>السرعة:</span>
+                  <select id="playback-speed" onchange="changePlaybackSpeed(this.value)" class="bg-slate-800 text-slate-200 text-xs rounded px-2 py-1 border border-slate-700">
+                    <option value="0.85">0.85x</option>
+                    <option value="1.0" selected>1.0x (عادي)</option>
+                    <option value="1.15">1.15x</option>
+                    <option value="1.25">1.25x</option>
+                  </select>
+                </div>
+
+                <!-- Download Button -->
+                <a id="download-link" download="تعليق_صوتي_بالدارجة.wav" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center">
+                  <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  </svg>
+                  تحميل WAV
+                </a>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Error Alert Banner -->
+          <div id="error-box" class="hidden mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs leading-relaxed">
+            <span class="font-bold block mb-1">حدث خطأ:</span>
+            <span id="error-message">تعذر الاتصال بخدمة الصوت. يرجى المحاولة مرة أخرى.</span>
+          </div>
+        </div>
+
+        <!-- Saved History Section -->
+        <div class="glass-card rounded-2xl p-6 shadow-xl">
+          <h3 class="text-sm font-bold text-slate-300 mb-3 flex items-center justify-between">
+            <span class="flex items-center">
+              <svg class="w-4 h-4 text-emerald-400 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              سجل التسجيلات السابقة
+            </span>
+            <span id="history-count" class="text-xs text-slate-500">0 مقطع</span>
+          </h3>
+
+          <div id="history-list" class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
+            <p id="no-history" class="text-xs text-slate-500 text-center py-4">لا توجد تسجيلات محفوظة بعد في هذه الجلسة</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modal for Script Polishing AI Result -->
+  <div id="polish-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card max-w-xl w-full rounded-2xl p-6 shadow-2xl border border-slate-700/80 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-bold text-white flex items-center">
+          <svg class="w-5 h-5 text-emerald-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg>
+          اقتراح تحسين النص بالدارجة المغربية
+        </h3>
+        <button onclick="closePolishModal()" class="text-slate-400 hover:text-white">&times;</button>
+      </div>
+      <p class="text-xs text-slate-400">قام المساعد بإعادة صياغة السكريبت ليكون أكثر سلاسة ومناسبة للتعليق الصوتي الطبيعي:</p>
+
+      <div id="polished-content" class="bg-slate-900 p-4 rounded-xl border border-slate-800 text-sm leading-relaxed text-slate-200 max-h-60 overflow-y-auto custom-scrollbar">
+        <!-- AI Polish Content here -->
+      </div>
+
+      <div class="flex justify-end space-x-3 space-x-reverse pt-2">
+        <button onclick="closePolishModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs hover:bg-slate-700 transition">إلغاء</button>
+        <button onclick="applyPolishedScript()" class="px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition">اعتماد النص الجديد</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 py-4 text-center text-xs text-slate-500 bg-slate-950/40">
+    استوديو التعليق الصوتي بالدارجة المغربية • مدعوم بـ Gemini 2.5 TTS & AI
+  </footer>
+
+  <!-- App Script Logic -->
+  <script>
+    // Empty key relies on proxy runtime environment
+    const apiKey = "";
+
+    // Preset Scripts in Moroccan Darija
+    const presets = {
+      commercial: "واش كتقلب على الحل الأفضل لخدماتك؟ اليوم جبنا ليك الحل السريع والفعال اللي غادي يهنيك من الصداع! اتصل بينا دابا واستفد من عرض خاص ومحدود.",
+      corporate: "فالشركة ديالنا، كنآمنو بأن النظرة المستقبلية كتبدا من الابتكار والجودة. بفضل فريقنا المحترف، كنقدمو لزبنائنا أفضل الخدمات والمعايير العالية اللي كتستاهلوها.",
+      documentary: "بين أزقة المدن القديمة وفي قلب التاريخ المغربي العريق، كتعيش قصص وحكايات ما كتموتش. كول حجرة هنا كتحكي تاريخ أجيال وصناعة تقليدية أصيلة.",
+      social: "السلام عليكم أصدقائي! اليوم غادي نشارك معكوم 3 د الأسرار المهمة لنجاح أي مشروع رقمي. ما تنساوش تديرو لايك وبارطاجي باش توصلكوم كل حاجة جديدة!"
+    };
+
+    let currentAudioBlob = null;
+    let audioHistory = [];
+    let tempPolishedText = "";
+
+    function loadPreset(key) {
+      if (presets[key]) {
+        document.getElementById('script-text').value = presets[key];
+        updateCharCount();
+      }
+    }
+
+    function updateCharCount() {
+      const text = document.getElementById('script-text').value;
+      document.getElementById('char-count').textContent = `${text.length} حرف`;
+    }
+
+    // Helper: Exponential backoff fetch
+    async function fetchWithRetry(url, options, retries = 5) {
+      const delays = [1000, 2000, 4000, 8000, 16000];
+      for (let i = 0; i < retries; i++) {
+        try {
+          const response = await fetch(url, options);
+          if (response.ok) return await response.json();
+          if (response.status === 429 || response.status >= 500) {
+            if (i === retries - 1) throw new Error(`خطأ في السيرفر: ${response.status}`);
+          } else {
+            const errJson = await response.json().catch(() => ({}));
+            throw new Error(errJson.error?.message || `خطأ الطلب: ${response.status}`);
+          }
+        } catch (err) {
+          if (i === retries - 1) throw err;
+        }
+        await new Promise(r => setTimeout(r, delays[i]));
+      }
+    }
+
+    // AI Polish Script with gemini-2.5-flash-preview-09-2025
+    async function polishScriptWithAI() {
+      const scriptText = document.getElementById('script-text').value.trim();
+      if (!scriptText) {
+        showError("يرجى كتابة نص السكريبت أولاً لتحسينه.");
+        return;
+      }
+
+      const polishBtn = document.getElementById('polish-btn');
+      polishBtn.disabled = true;
+      polishBtn.innerHTML = `
+        <svg class="w-3.5 h-3.5 ml-1 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+        جاري التحسين...
+      `;
+
+      try {
+        const prompt = `أنت خبير تعليق صوتي (Voice Over) بالدارجة المغربية. قم بإعادة صياغة النص التالي ليكون نطق بالدارجة المغربية السلسة والواضحة المخصصة للتسجيل الصوتي الاحترافي. حافظ على المعنى الأصلي وزد من التناغم والجمالية للنطق:
+
+النص الأصلي:
+"${scriptText}"
+
+أعد كتابة النص فقط بالدارجة المغربية المتقنة بدون أي مقدمات أو شرح.`;
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const data = await fetchWithRetry(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }]
+          })
+        });
+
+        const polishedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (polishedText) {
+          tempPolishedText = polishedText.trim();
+          document.getElementById('polished-content').innerText = tempPolishedText;
+          document.getElementById('polish-modal').classList.remove('hidden');
+        } else {
+          showError("لم نتمكن من تحسين النص، يرجى المحاولة لاحقاً.");
+        }
+      } catch (err) {
+        showError("حدث خطأ أثناء تحسين السكريبت: " + err.message);
+      } finally {
+        polishBtn.disabled = false;
+        polishBtn.innerHTML = `
+          <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+          تحسين السكريبت للدارجة
+        `;
+      }
+    }
+
+    function closePolishModal() {
+      document.getElementById('polish-modal').classList.add('hidden');
+    }
+
+    function applyPolishedScript() {
+      if (tempPolishedText) {
+        document.getElementById('script-text').value = tempPolishedText;
+        updateCharCount();
+      }
+      closePolishModal();
+    }
+
+    // Main Audio Generation function using Gemini TTS API
+    async function generateAudio() {
+      const text = document.getElementById('script-text').value.trim();
+      if (!text) {
+        showError("المرجو إدخال نص السكريبت بالدارجة أولاً.");
+        return;
+      }
+
+      hideError();
+      showLoading(true);
+
+      const selectedVoice = document.querySelector('input[name="voice"]:checked')?.value || "Fenrir";
+      const selectedTone = document.getElementById('tone-select').value;
+      const selectedPacing = document.getElementById('pacing-select').value;
+
+      // Construct clear prompt directing the AI to read naturally in Moroccan Darija
+      const promptText = `تحدث بالدارجة المغربية بأسلوب احترافي وبصوت بالغ واضح ورزين (${selectedTone}، ${selectedPacing}):\n\n${text}`;
+
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+        
+        const payload = {
+          contents: [{ parts: [{ text: promptText }] }],
+          generationConfig: {
+            responseModalities: ["AUDIO"],
+            speechConfig: {
+              voiceConfig: {
+                prebuiltVoiceConfig: {
+                  voiceName: selectedVoice
+                }
+              }
+            }
+          },
+          model: "gemini-2.5-flash-preview-tts"
+        };
+
+        const result = await fetchWithRetry(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const part = result.candidates?.[0]?.content?.parts?.[0];
+        if (part && part.inlineData && part.inlineData.data) {
+          const mimeType = part.inlineData.mimeType || "audio/L16;rate=24000";
+          const sampleRateMatch = mimeType.match(/rate=(\d+)/i);
+          const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 24000;
+
+          // Convert raw PCM Base64 to clean WAV Blob directly without byte-swapping
+          const wavBlob = pcmToWav(part.inlineData.data, sampleRate);
+          currentAudioBlob = wavBlob;
+
+          // Setup Audio Player
+          const audioUrl = URL.createObjectURL(wavBlob);
+          setupAudioPlayer(audioUrl, text, selectedVoice);
+
+          // Add to History
+          addToHistory(text, selectedVoice, audioUrl, wavBlob);
+
+        } else {
+          throw new Error("لم يتم إرجاع ملف صوتي صالح من الخادم.");
+        }
+
+      } catch (err) {
+        showError("فشل إنشاء التعليق الصوتي: " + err.message);
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    // Convert raw PCM 16-bit to standard Little-Endian WAV Blob
+    function pcmToWav(base64Data, sampleRate = 24000) {
+      const binaryString = atob(base64Data);
+      const len = binaryString.length;
+      
+      // Ensure even byte length for 16-bit audio
+      const numBytes = len - (len % 2);
+
+      const numChannels = 1;
+      const bitsPerSample = 16;
+      const byteRate = sampleRate * numChannels * (bitsPerSample / 8);
+      const blockAlign = numChannels * (bitsPerSample / 8);
+
+      const buffer = new ArrayBuffer(44 + numBytes);
+      const view = new DataView(buffer);
+
+      function writeString(offset, string) {
+        for (let i = 0; i < string.length; i++) {
+          view.setUint8(offset + i, string.charCodeAt(i));
+        }
+      }
+
+      // RIFF header
+      writeString(0, 'RIFF');
+      view.setUint32(4, 36 + numBytes, true); // Little-endian
+      writeString(8, 'WAVE');
+
+      // "fmt " sub-chunk
+      writeString(12, 'fmt ');
+      view.setUint32(16, 16, true);           // Subchunk1Size (16 for PCM)
+      view.setUint16(20, 1, true);            // AudioFormat (1 = PCM)
+      view.setUint16(22, numChannels, true);  // Mono channel
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, byteRate, true);
+      view.setUint16(32, blockAlign, true);
+      view.setUint16(34, bitsPerSample, true);
+
+      // "data" sub-chunk
+      writeString(36, 'data');
+      view.setUint32(40, numBytes, true);
+
+      // Copy PCM bytes directly as standard 16-bit PCM
+      const uint8View = new Uint8Array(buffer, 44, numBytes);
+      for (let i = 0; i < numBytes; i++) {
+        uint8View[i] = binaryString.charCodeAt(i);
+      }
+
+      return new Blob([buffer], { type: 'audio/wav' });
+    }
+
+    // Player UI Handlers
+    function setupAudioPlayer(audioUrl, scriptSnippet, voiceName) {
+      const audio = document.getElementById('main-audio');
+      audio.src = audioUrl;
+
+      document.getElementById('empty-state').classList.add('hidden');
+      document.getElementById('active-player').classList.remove('hidden');
+      document.getElementById('player-badge').textContent = `المعلق: ${getVoiceLabel(voiceName)}`;
+      document.getElementById('player-badge').className = "text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+
+      const downloadBtn = document.getElementById('download-link');
+      downloadBtn.href = audioUrl;
+
+      // Render Waveform Bars Effect
+      renderWaveformBars();
+
+      audio.onloadedmetadata = function() {
+        document.getElementById('total-duration').textContent = formatTime(audio.duration);
+      };
+
+      audio.ontimeupdate = function() {
+        document.getElementById('current-time').textContent = formatTime(audio.currentTime);
+        animateWaveform(audio.currentTime, audio.duration);
+      };
+
+      audio.onended = function() {
+        showPlayState(false);
+      };
+
+      // Reset play icon state
+      showPlayState(false);
+    }
+
+    function renderWaveformBars() {
+      const container = document.getElementById('waveform-bars');
+      container.innerHTML = '';
+      for (let i = 0; i < 36; i++) {
+        const bar = document.createElement('div');
+        const height = Math.floor(Math.random() * 80) + 20;
+        bar.className = 'w-1 bg-slate-700 rounded-full transition-all duration-200 bar-item';
+        bar.style.height = `${height}%`;
+        container.appendChild(bar);
+      }
+    }
+
+    function animateWaveform(current, total) {
+      if (!total) return;
+      const progress = current / total;
+      const bars = document.querySelectorAll('.bar-item');
+      const activeCount = Math.floor(progress * bars.length);
+
+      bars.forEach((bar, idx) => {
+        if (idx <= activeCount) {
+          bar.classList.remove('bg-slate-700');
+          bar.classList.add('bg-emerald-400');
+        } else {
+          bar.classList.remove('bg-emerald-400');
+          bar.classList.add('bg-slate-700');
+        }
+      });
+    }
+
+    function togglePlayPause() {
+      const audio = document.getElementById('main-audio');
+      if (audio.paused) {
+        audio.play();
+        showPlayState(true);
+      } else {
+        audio.pause();
+        showPlayState(false);
+      }
+    }
+
+    function showPlayState(isPlaying) {
+      const playIcon = document.getElementById('play-icon');
+      const pauseIcon = document.getElementById('pause-icon');
+      if (isPlaying) {
+        playIcon.classList.add('hidden');
+        pauseIcon.classList.remove('hidden');
+      } else {
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+      }
+    }
+
+    function changePlaybackSpeed(val) {
+      const audio = document.getElementById('main-audio');
+      audio.playbackRate = parseFloat(val);
+    }
+
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return "00:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function getVoiceLabel(voice) {
+      const map = {
+        'Fenrir': 'ياسين (رجالي عميق)',
+        'Charon': 'فؤاد (رجالي فخم)',
+        'Orus': 'أميد (رجالي رسمي)',
+        'Kore': 'مريم (نسائي دافئ)'
+      };
+      return map[voice] || voice;
+    }
+
+    // History items management
+    function addToHistory(scriptText, voice, audioUrl, blob) {
+      audioHistory.unshift({
+        id: Date.now(),
+        text: scriptText,
+        voice: voice,
+        url: audioUrl,
+        time: new Date().toLocaleTimeString('ar-MA', { hour: '2-digit', minute: '2-digit' })
+      });
+
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const list = document.getElementById('history-list');
+      const count = document.getElementById('history-count');
+      count.textContent = `${audioHistory.length} مقطع`;
+
+      if (audioHistory.length === 0) {
+        list.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">لا توجد تسجيلات محفوظة بعد في هذه الجلسة</p>`;
+        return;
+      }
+
+      list.innerHTML = audioHistory.map(item => `
+        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex items-center justify-between hover:border-slate-700 transition">
+          <div class="flex-grow min-w-0 ml-3">
+            <p class="text-xs font-bold text-slate-200 truncate">${item.text}</p>
+            <span class="text-[10px] text-slate-400">${getVoiceLabel(item.voice)} • ${item.time}</span>
+          </div>
+          <div class="flex items-center space-x-2 space-x-reverse flex-shrink-0">
+            <button onclick="playHistoryItem('${item.url}', '${item.text}', '${item.voice}')" class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 text-xs transition">
+              استماع
+            </button>
+            <a href="${item.url}" download="تعليق_صوتي_${item.id}.wav" class="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs transition">
+              تحميل
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function playHistoryItem(url, text, voice) {
+      setupAudioPlayer(url, text, voice);
+      togglePlayPause();
+    }
+
+    // Loading & UI helper functions
+    function showLoading(isLoading) {
+      const loadingState = document.getElementById('loading-state');
+      const emptyState = document.getElementById('empty-state');
+      const activePlayer = document.getElementById('active-player');
+      const genBtn = document.getElementById('generate-btn');
+
+      if (isLoading) {
+        loadingState.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+        activePlayer.classList.add('hidden');
+        genBtn.disabled = true;
+        genBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      } else {
+        loadingState.classList.add('hidden');
+        genBtn.disabled = false;
+        genBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+    }
+
+    function showError(msg) {
+      const errorBox = document.getElementById('error-box');
+      const errorMsg = document.getElementById('error-message');
+      errorMsg.textContent = msg;
+      errorBox.classList.remove('hidden');
+    }
+
+    function hideError() {
+      document.getElementById('error-box').classList.add('hidden');
+    }
+
+    // Initialize character count
+    updateCharCount();
+  </script>
+</body>
+</html>
+
