@@ -303,12 +303,15 @@
 
         <!-- Fluency Timer -->
         <div id="timer-container" class="bg-sky-50 p-3 rounded-xl border border-sky-200 flex flex-wrap justify-between items-center gap-3 mb-4">
-            <div class="flex gap-2">
+            <div class="flex gap-2 items-center">
                 <button id="start-timer-btn" onclick="toggleTimer()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition">
                     ▶ بدء العداد (60 ثانية)
                 </button>
                 <button onclick="resetTimer()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold px-3 py-2 rounded-lg text-sm transition">
                     إعادة ضبط
+                </button>
+                <button onclick="allowManualTimerBypass()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs px-2.5 py-2 rounded-lg transition" title="تجاوز انتظار العداد إذا انتهى القارئ مبكراً">
+                    ⏩ تجاوز العداد
                 </button>
             </div>
             <div id="timer" class="text-3xl font-black text-sky-900 min-w-[60px] text-center">60</div>
@@ -404,10 +407,100 @@
             </div>
         </div>
 
+        <!-- Warning Toast Modal / Box -->
+        <div id="validation-warning" class="hidden bg-rose-100 border-2 border-rose-400 text-rose-900 p-3 rounded-xl mb-4 font-bold text-xs md:text-sm flex items-center justify-between gap-2">
+            <span id="validation-warning-text">⚠️ تنبيه: يرجى تحديد حالة قراءة النص أولاً الضغط على (أكمل القراءة) أو (لم يكمل القراءة)!</span>
+            <button onclick="document.getElementById('validation-warning').classList.add('hidden')" class="text-rose-700 font-extrabold px-2 py-0.5 hover:bg-rose-200 rounded-md">✕</button>
+        </div>
+
+        <!-- Navigation Buttons Bar -->
         <div class="flex flex-wrap justify-between items-center gap-3 mt-6 pt-4 border-t border-sky-100">
-            <button onclick="saveAndProceedStage()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow transition text-sm flex items-center gap-2">
-                💾 حفظ والانتقال للمرحلة الموالية وفق الدليل الرسمي ➡
+            <button onclick="goToPreviousStage()" id="prev-stage-btn" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2.5 rounded-xl transition text-xs md:text-sm flex items-center gap-1">
+                ⬅️ المرحلة السابقة
             </button>
+
+            <div class="flex gap-2">
+                <button onclick="goToNextStageDirectly()" id="next-stage-btn" class="bg-sky-100 hover:bg-sky-200 text-sky-900 font-bold px-4 py-2.5 rounded-xl transition text-xs md:text-sm flex items-center gap-1">
+                    المرحلة التالية ➡
+                </button>
+                <button onclick="saveAndProceedStage()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-xl shadow transition text-xs md:text-sm flex items-center gap-2">
+                    💾 حفظ والانتقال الموالية
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Student Scores Modal -->
+    <div id="edit-student-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-3">
+        <div class="bg-white rounded-2xl shadow-2xl border-4 border-sky-600 max-w-lg w-full p-5">
+            <h3 class="font-bold text-lg text-sky-900 border-b pb-2 mb-3">✏️ تعديل معطيات التلميذ(ة): <span id="edit-modal-student-name" class="text-amber-600"></span></h3>
+            
+            <div class="space-y-3 text-xs md:text-sm font-semibold">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block mb-1 text-slate-700">LTC (طلاقة النص القصير):</label>
+                        <select id="edit-score-ltc" class="w-full p-2 border rounded-lg bg-sky-50 font-bold">
+                            <option value="-">- غير مجتاز</option>
+                            <option value="1">1 - متحكم</option>
+                            <option value="0">0 - غير متحكم</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-slate-700">CTC (فهم النص القصير):</label>
+                        <select id="edit-score-ctc" class="w-full p-2 border rounded-lg bg-sky-50 font-bold">
+                            <option value="-">- غير مجتاز</option>
+                            <option value="1">1 - متحكم</option>
+                            <option value="0">0 - غير متحكم</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-slate-700">LP (طلاقة الفقرة):</label>
+                        <select id="edit-score-lp" class="w-full p-2 border rounded-lg bg-sky-50 font-bold">
+                            <option value="-">- غير مجتاز</option>
+                            <option value="1">1 - متحكم</option>
+                            <option value="0">0 - غير متحكم</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-slate-700">CP (فهم الفقرة):</label>
+                        <select id="edit-score-cp" class="w-full p-2 border rounded-lg bg-sky-50 font-bold">
+                            <option value="-">- غير مجتاز</option>
+                            <option value="1">1 - متحكم</option>
+                            <option value="0">0 - غير متحكم</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-slate-700">LTM (طلاقة النص المتوسط):</label>
+                        <select id="edit-score-ltm" class="w-full p-2 border rounded-lg bg-sky-50 font-bold">
+                            <option value="-">- غير مجتاز</option>
+                            <option value="1">1 - متحكم</option>
+                            <option value="0">0 - غير متحكم</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-slate-700">CTM (فهم النص المتوسط):</label>
+                        <select id="edit-score-ctm" class="w-full p-2 border rounded-lg bg-sky-50 font-bold">
+                            <option value="-">- غير مجتاز</option>
+                            <option value="1">1 - متحكم</option>
+                            <option value="0">0 - غير متحكم</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block mb-1 text-slate-700">اللبنة المستحقة:</label>
+                    <select id="edit-final-level" class="w-full p-2 border rounded-lg bg-amber-50 font-bold text-amber-900">
+                        <option value="اللبنة 1">اللبنة 1</option>
+                        <option value="اللبنة 2">اللبنة 2</option>
+                        <option value="اللبنة 3">اللبنة 3</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-5 border-t pt-3">
+                <button onclick="closeEditModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs">إلغاء</button>
+                <button onclick="saveStudentModalEdit()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2 rounded-xl text-xs shadow">حفظ التعديلات</button>
+            </div>
         </div>
     </div>
 
@@ -509,7 +602,7 @@
                         <th>LTM<br><span class="text-[9px] font-normal">طلاقة النص المتوسط</span></th>
                         <th>CTM<br><span class="text-[9px] font-normal">فهم النص المتوسط</span></th>
                         <th>اللبنة المستحقة</th>
-                        <th class="no-print w-20">إجراءات</th>
+                        <th class="no-print w-28">إجراءات</th>
                     </tr>
                 </thead>
                 <tbody id="collective-grid-body">
@@ -620,7 +713,7 @@
             {
                 id: 1,
                 title: "النص المتوسط 1",
-                text: "رَسَتْ بِنَا السَّفِينَةُ عَلَى شَاطِئِ جَزِيرَةٍ مَكْسُوَّةٍ بِالْأَشْجَارِ الْمُثْمِرَةِ. كَانَتِ الْجَزِيرَةُ خَالِيَةً، وَبَيْنَمَا كَانَ رُفَقَائِي يَقْطِفُونَ أَلْوَانَ الْفَوَاكِهِ، جَلَسْتُ تَحْتَ شَجَرَةٍ وَارِفَةِ الظِّلِّ، ثُمَّ اسْتَغْرَقْتُ فِي نَوْمٍ عَمِيقٍ. اسْتَيْقَظْتُ فَلَمْ أَجِدِ السَّفِينَةَ ، لَقَدْ أَبْحَرَتْ دُونِي. فَغَضِبْتُ غَضَبًا شَدِيدًا ، وَظَلَلْتُ أَبْحَثُ وَسَطَ الْجَزِيرَةِ لَعَلِّي أَجِدُ مَكَانًا آمِنًا أَبِيتُ فِيهِ. فَرَأَيْتُ كُرَةً بَيْضَوِيَّةً كَبِيرَةَ الْحَجْمِ، فَأَخَذْتُ أَطُوفُ حَوْلَهَا . وَفَجْأَةً شَعَرْتُ بِأَنَّ حَاجِزًا حَالَ بَيْنِي وَبَيْنَ الشَّمْسِ، ظَنَنْتُهُ لِأَوَّلِ وَهْلَةٍ سَحَابَةً، لَكِنْ لَمَّا رَفَعْتُ بَصَرِي ، وَجَدْتُهُ طَائِرًا ضَخْمًا . حَطَّ هَذَا الطَّائِرُ عَلَى الْكُرَةِ، فَفَهِمْتُ أَنَّهَا بَيْضَتُهُ. وَكَانَتِ الْمَسَافَةُ الَّتِي تَفْصِلُ بَيْنِي وَبَيْنَ سَاقِهِ الَّتِي تُشْبِهُ جِذْعَ الشَّجَرَةِ قَصِيرَةً جِدًّا. نَزَعْتُ عِمَامَتِي، وَرَبَطْتُ بِهَا نَفْسِي إِلَى سَاقِ الطَّائِرِ ، وَقَضَيْتُ اللَّيْلَةَ كُلَّهَا عَلَى هَذِهِ الْحَالِ. وَلَمَّا أَشْرَقَ نُورُ الصَّبَاحِ، طَارَ الطَّائِرُ وَأَنَا مُعَلَّقٌ بِهِ، وَحَلَّقَ حَتَّى حَطَّ عَلَى جَزِيرَةٍ أُخْرَى آهِلَةٍ بِالسُّكَّانِ، فَفَكَكْتُ قَيْدِي، وَهَرْوَلْتُ مُسْرِعًا إِلَى الْمِينَاءِ، حَيْثُ كَانَتْ سَفِينَةٌ أُخْرَى قَادَتْنِي إِلَى بَلْدَتِي.",
+                text: "رَسَتْ بِنَا السَّفِينَةُ عَلَى شَاطِئِ جَزِيرَةٍ مَكْسُوَّةٍ بِالْأَشْجَارِ الْمُثْمِرَةِ. كَانَتِ الْجَزِيرَةُ خَالِيَةً، وَبَيْنَمَا كَانَ رُفَقَائِي يَقْطِفُونَ أَلْوَانَ الْفَوَاكِهِ، جَلَسْتُ تَحْتَ شَجَرَةٍ وَارِفَةِ الظِّلِّ، ثُمَّ اسْتَغْرَقْتُ فِي نَوْمٍ عَمِيقٍ. اسْتَيْقَظْتُ فَلَمْ أَجِدِ السَّفِينَةَ ، لَقَدْ أَبْحَرَتْ دُونِي. فَغَضِبْتُ غَضَبًا شَدِيدًا ، وَظَلَلْتُ أَبْحَثُ وَسَطَ الْجَزِيرَةِ لَعَلِّي أَجِدُ مَكَانًا آمِنًا أَبِيتُ فِيهِ. فَرَأَيْتُ كُرَةً بَيْضَوِيَّةً كَبِيرَةَ الْحَجْمِ، فَأَخَذْتُ أَطُوفُ حَوْلَهَا . وَفَجْأَةً شَعَرْتُ بِأَنَّ حَاجِزًا حَالَ بَيْنِي وَبَيْنَ الشَّمْسِ، ظَنَنْتُهُ لِأَوَّلِ وَهْلَةٍ سَحَابَةً، لَكِنْ لَمَّا رَفَعْتُ بَصَرِي ، وَجَدْتُهُ طَائِرًا ضَخْمًا . حَطَّ هَذَا الطَّائِرُ عَلَى الْكُرَةِ، فَفَهِمْتُ أَنَّهَا بَيْضَتُهُ. وَكَانَتِ الْمَسَافَةُ الَّتِي تَفْصِلُ بَيْنِي وَبَيْنَ سَاقِهِ الَّتِي تُشْبِهُ جِذْعَ الشَّجَرَةِ قَصِيرَةً جِدًّا. نَزَعْتُ عِمَامَتِي، وَرَبَطْتُ بِهَا نَفْسِي إِلَى سَاقِ الطَّائِرِ ، وَقَضَيْتُ اللَّيْلَةَ كُلَّهَا عَلَى هَذِهِ الْحَالِ. وَلَمَّا أَشْرَقَ نُورُ الصَّبَاحِ، طَارَ الطَّائِرُ وَأَنَا مُعَلَّقٌ بِهِ، وَحَلَّقَ حَتَّى حَطَّ عَلَى جَزِيرَةٍ أُخْرَى آهِلَةٍ بِالسُّكَّانِ، فَفَككْتُ قَيْدِي، وَهَرْوَلْتُ مُسْرِعًا إِلَى الْمِينَاءِ، حَيْثُ كَانَتْ سَفِينَةٌ أُخْرَى قَادَتْنِي إِلَى بَلْدَتِي.",
                 targetWords: 90,
                 questions: [
                     { id: 1, text: "1. أَيْنَ رَسَتِ السَّفِينَةُ؟", answer: "عَلَى شَاطِئِ جَزِيرَةٍ مَكْسُوَّةٍ بِالْأَشْجَارِ الْمُثْمِرَةِ." },
@@ -659,6 +752,8 @@
         ]
     };
 
+    const STAGE_KEYS = ['LTC', 'CTC', 'LP', 'CP', 'LTM', 'CTM'];
+
     const STAGE_CONFIG = {
         'LTC': { stageNum: 1, code: 'LTC', dbKey: 'short', targetWords: 80, title: 'المرحلة 1: النص القصير (طلاقة القراءة - LTC)', type: 'fluency' },
         'CTC': { stageNum: 2, code: 'CTC', dbKey: 'short', targetWords: 80, title: 'المرحلة 2: النص القصير (الفهم المباشر - CTC)', type: 'comprehension' },
@@ -674,9 +769,11 @@
     let currentSubIndex = 0;
     let timerInterval = null;
     let timerSeconds = 60;
+    let isTimerFinished = false;
     let currentQuestionsState = [];
     let lastEvaluatedNote = '';
     let isReadCompleted = null;
+    let editingStudentId = null;
 
     function toggleHeaderPanel() {
         const panel = document.getElementById('header-custom-panel');
@@ -804,6 +901,8 @@
         textChoiceSelect.value = currentSubIndex;
 
         isReadCompleted = null;
+        document.getElementById('validation-warning').classList.add('hidden');
+
         renderStageUI();
         resetTimer();
     }
@@ -876,6 +975,8 @@
 
     function setCompletionStatus(status) {
         isReadCompleted = status;
+        document.getElementById('validation-warning').classList.add('hidden');
+
         const btnDone = document.getElementById('btn-read-completed');
         const btnNot = document.getElementById('btn-read-incomplete');
 
@@ -905,7 +1006,6 @@
         const stageStatusBadge = document.getElementById('stage-status-badge');
         const stageActionHint = document.getElementById('stage-action-hint');
 
-        // التقييم المشروط بإتمام القراءة وبلوغ العتبة
         const isPassed = (isReadCompleted === true) && (correct >= config.targetWords);
 
         if (isReadCompleted === null) {
@@ -966,6 +1066,7 @@
                 if (timerSeconds <= 0) {
                     clearInterval(timerInterval);
                     timerInterval = null;
+                    isTimerFinished = true;
                     btn.textContent = '⏱ انتهى الوقت!';
                     btn.className = 'bg-rose-600 text-white font-bold px-4 py-2 rounded-lg text-sm transition';
                 }
@@ -981,10 +1082,20 @@
             timerInterval = null;
         }
         timerSeconds = 60;
+        isTimerFinished = false;
         document.getElementById('timer').textContent = '60';
         const btn = document.getElementById('start-timer-btn');
         btn.textContent = '▶ بدء العداد (60 ثانية)';
         btn.className = 'bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition';
+    }
+
+    function allowManualTimerBypass() {
+        isTimerFinished = true;
+        document.getElementById('timer').textContent = '0 (تجاوز)';
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
     }
 
     function renderComprehensionQuestions(questions) {
@@ -1083,30 +1194,69 @@
         if (!currentStudent) return;
 
         const config = STAGE_CONFIG[currentStageKey];
-        let score = 0;
+        const warnBox = document.getElementById('validation-warning');
+        const warnText = document.getElementById('validation-warning-text');
 
         if (config.type === 'fluency') {
+            if (isReadCompleted === null) {
+                warnText.textContent = "⚠️ ينبغي تحديد حالة قراءة النص أولاً بالتأشير على: (أكمل القراءة) أو (لم يكمل القراءة)!";
+                warnBox.classList.remove('hidden');
+                return;
+            }
+
+            if (!isTimerFinished && timerSeconds > 0) {
+                warnText.textContent = `⚠️ لا يمكن الانتقال حتى يكتمل وقت القراءة (60 ثانية) أو الضغط على "تجاوز العداد"! (المتبقي: ${timerSeconds} ثانية)`;
+                warnBox.classList.remove('hidden');
+                return;
+            }
+
+            warnBox.classList.add('hidden');
+
             const errors = document.querySelectorAll('#word-container .word-item.error').length;
             const wordsRead = parseInt(document.getElementById('words-read').value) || 0;
             const correctWords = Math.max(0, wordsRead - errors);
 
-            // اشتراط إتمام القراءة وبلوغ العتبة المطلوبة
-            score = (isReadCompleted === true && correctWords >= config.targetWords) ? 1 : 0;
+            const score = (isReadCompleted === true && correctWords >= config.targetWords) ? 1 : 0;
             currentStudent.scores[config.code] = score;
+
+            saveStudentToDatabase();
+            determineOfficialNextStage(config.code, score);
 
         } else {
-            score = parseInt(document.getElementById('comp-score').value) || 0;
+            const score = parseInt(document.getElementById('comp-score').value) || 0;
             currentStudent.scores[config.code] = score;
-        }
 
+            saveStudentToDatabase();
+            determineOfficialNextStage(config.code, score);
+        }
+    }
+
+    function goToPreviousStage() {
+        const curIndex = STAGE_KEYS.indexOf(currentStageKey);
+        if (curIndex > 0) {
+            loadStage(STAGE_KEYS[curIndex - 1]);
+        } else {
+            alert("أنت حالياً في المرحلة الأولى (LTC).");
+        }
+    }
+
+    function goToNextStageDirectly() {
+        const curIndex = STAGE_KEYS.indexOf(currentStageKey);
+        if (curIndex < STAGE_KEYS.length - 1) {
+            loadStage(STAGE_KEYS[curIndex + 1]);
+        } else {
+            alert("أنت في المرحلة الأخيرة (CTM). يمكنك حفظ النتيجة وتفريغ شبكة الموضعة.");
+        }
+    }
+
+    function saveStudentToDatabase() {
         const idx = studentsList.findIndex(s => s.id === currentStudent.id);
         if (idx >= 0) {
             studentsList[idx] = currentStudent;
         } else {
             studentsList.push(currentStudent);
         }
-
-        determineOfficialNextStage(config.code, score);
+        localStorage.setItem('ar_tarl_students_2026', JSON.stringify(studentsList));
     }
 
     function determineOfficialNextStage(stageCode, score) {
@@ -1161,11 +1311,51 @@
 
         lastEvaluatedNote = `📌 <strong>${currentStudent.name} (${currentStudent.studentClass})</strong>: ${reason}`;
 
-        const idx = studentsList.findIndex(s => s.id === currentStudent.id);
-        if (idx >= 0) studentsList[idx] = currentStudent;
+        saveStudentToDatabase();
+        showCollectiveGridDirectly();
+    }
+
+    function openEditModal(studentId) {
+        editingStudentId = studentId;
+        const st = studentsList.find(s => s.id === studentId);
+        if (!st) return;
+
+        document.getElementById('edit-modal-student-name').textContent = `${st.name} (${st.studentClass})`;
+        document.getElementById('edit-score-ltc').value = st.scores.LTC !== undefined ? st.scores.LTC : '-';
+        document.getElementById('edit-score-ctc').value = st.scores.CTC !== undefined ? st.scores.CTC : '-';
+        document.getElementById('edit-score-lp').value  = st.scores.LP  !== undefined ? st.scores.LP  : '-';
+        document.getElementById('edit-score-cp').value  = st.scores.CP  !== undefined ? st.scores.CP  : '-';
+        document.getElementById('edit-score-ltm').value = st.scores.LTM !== undefined ? st.scores.LTM : '-';
+        document.getElementById('edit-score-ctm').value = st.scores.CTM !== undefined ? st.scores.CTM : '-';
+        document.getElementById('edit-final-level').value = st.finalLevel || 'اللبنة 1';
+
+        document.getElementById('edit-student-modal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+        document.getElementById('edit-student-modal').classList.add('hidden');
+        editingStudentId = null;
+    }
+
+    function saveStudentModalEdit() {
+        if (!editingStudentId) return;
+        const st = studentsList.find(s => s.id === editingStudentId);
+        if (!st) return;
+
+        const valOrNum = (val) => (val === "1" ? 1 : (val === "0" ? 0 : "-"));
+
+        st.scores.LTC = valOrNum(document.getElementById('edit-score-ltc').value);
+        st.scores.CTC = valOrNum(document.getElementById('edit-score-ctc').value);
+        st.scores.LP  = valOrNum(document.getElementById('edit-score-lp').value);
+        st.scores.CP  = valOrNum(document.getElementById('edit-score-cp').value);
+        st.scores.LTM = valOrNum(document.getElementById('edit-score-ltm').value);
+        st.scores.CTM = valOrNum(document.getElementById('edit-score-ctm').value);
+
+        st.finalLevel = document.getElementById('edit-final-level').value;
 
         localStorage.setItem('ar_tarl_students_2026', JSON.stringify(studentsList));
-        showCollectiveGridDirectly();
+        closeEditModal();
+        renderCollectiveGrid();
     }
 
     function renderCollectiveGrid() {
@@ -1225,9 +1415,14 @@
                 <td>${renderBadge(student.scores.CTM)}</td>
                 <td><span class="font-bold text-sky-900 text-xs bg-sky-100 px-2.5 py-1 rounded">${student.finalLevel || '-'}</span></td>
                 <td class="no-print">
-                    <button onclick="deleteStudent(${student.id})" class="bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold px-2 py-1 rounded text-xs transition">
-                        🗑️ حذف
-                    </button>
+                    <div class="flex items-center justify-center gap-1">
+                        <button onclick="openEditModal(${student.id})" class="bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold px-2 py-1 rounded text-xs transition" title="تعديل النقط والمعطيات">
+                            ✏️ تعديل
+                        </button>
+                        <button onclick="deleteStudent(${student.id})" class="bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold px-2 py-1 rounded text-xs transition" title="حذف التلميذ">
+                            🗑️ حذف
+                        </button>
+                    </div>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -1328,9 +1523,11 @@
     }
 
     function deleteStudent(id) {
-        studentsList = studentsList.filter(s => s.id !== id);
-        localStorage.setItem('ar_tarl_students_2026', JSON.stringify(studentsList));
-        renderCollectiveGrid();
+        if (confirm("هل أنت متأكد من حذف بيانات هذا التلميذ؟")) {
+            studentsList = studentsList.filter(s => s.id !== id);
+            localStorage.setItem('ar_tarl_students_2026', JSON.stringify(studentsList));
+            renderCollectiveGrid();
+        }
     }
 
     function confirmClearData() {
