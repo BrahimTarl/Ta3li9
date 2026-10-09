@@ -25,16 +25,16 @@
         }
 
         .word-item {
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 6px;
             cursor: pointer;
             user-select: none;
             background: #e3f2fd;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             display: inline-block;
-            margin: 2px 1px;
+            margin: 3px;
             font-size: 1.25rem;
-            line-height: 1.8;
+            line-height: 2;
             border: 1px solid #bbdefb;
         }
 
@@ -51,14 +51,13 @@
             border-color: #ef9a9a;
         }
 
-        .punct-mark {
+        .punct-item {
+            display: inline-block;
+            margin: 0 1px;
             font-size: 1.25rem;
+            line-height: 2;
             color: #475569;
             font-weight: bold;
-            margin-left: 2px;
-            margin-right: 1px;
-            display: inline;
-            user-select: none;
         }
 
         .grid-table {
@@ -215,7 +214,7 @@
 <body class="p-3 md:p-6 min-h-screen">
 
 <div class="max-w-5xl mx-auto">
-    <!-- Main Application Header -->
+    <!-- Header -->
     <header class="bg-gradient-to-r from-sky-700 to-cyan-800 text-white p-5 rounded-2xl shadow-lg text-center mb-6 no-print">
         <div class="flex flex-wrap justify-center items-center gap-2 mb-2 border-b border-sky-500/50 pb-2">
             <span class="bg-amber-400 text-slate-900 font-extrabold px-4 py-1 rounded-full text-xs shadow-sm">
@@ -225,11 +224,11 @@
         
         <h1 class="text-xl md:text-2xl font-bold mb-1">برنامج المعالجة المكثفة - رائز الموضعة (اللغة العربية)</h1>
         <p class="text-sky-100 text-sm md:text-base">إعداديات الريادة | دليل التمرير والتقييم الرسمي للطلاقة والفهم</p>
-        <div id="main-header-school-info" class="mt-2 text-sky-200 font-semibold text-xs md:text-sm">🏫 إعداديات الريادة</div>
+        <div id="main-header-school-info" class="mt-2 text-sky-200 font-semibold text-xs md:text-sm">🏫 الثانوية الإعدادية أنس بن مالك - اشتوكة آيت باها</div>
         
         <div class="mt-4 flex flex-wrap justify-center gap-2">
             <button onclick="addNewStudent()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-extrabold px-4 py-2 rounded-xl shadow transition text-sm flex items-center gap-1">
-                ➕ إضافة تلميذ(ة) جديد(ة)
+                ➕ إضافة / اختيار تلميذ(ة)
             </button>
             <button onclick="showCollectiveGridDirectly()" class="bg-white text-sky-800 hover:bg-sky-50 font-bold px-4 py-2 rounded-xl shadow transition text-sm">
                 📊 عرض الشبكة الجماعية الموحدة (<span id="header-student-count">0</span> تلميذ)
@@ -237,7 +236,7 @@
         </div>
     </header>
 
-    <!-- School & Teacher Customization Panel -->
+    <!-- School & Teacher Info Customization -->
     <div class="bg-white p-5 rounded-2xl shadow-md border-t-4 border-cyan-600 mb-6 no-print">
         <div class="flex justify-between items-center mb-3 cursor-pointer" onclick="toggleHeaderPanel()">
             <h3 class="text-sm md:text-base font-bold text-sky-900 flex items-center gap-2">
@@ -249,11 +248,11 @@
         <div id="header-custom-panel" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-sky-100">
             <div>
                 <label for="info-directorate-main" class="block text-xs font-bold text-slate-700 mb-1">المديرية الإقليمية:</label>
-                <input type="text" id="info-directorate-main" oninput="updateSchoolInfoFromMain(this.value, 'dir')" class="w-full p-2.5 text-xs border-2 border-sky-100 rounded-xl focus:border-sky-500 outline-none font-semibold bg-sky-50/50" placeholder="مثال: مديرية اشتوكة ايت باها">
+                <input type="text" id="info-directorate-main" oninput="updateSchoolInfoFromMain(this.value, 'dir')" class="w-full p-2.5 text-xs border-2 border-sky-100 rounded-xl focus:border-sky-500 outline-none font-semibold bg-sky-50/50" placeholder="مديرية اشتوكة آيت باها">
             </div>
             <div>
                 <label for="info-school-main" class="block text-xs font-bold text-slate-700 mb-1">المؤسسة التعليمية:</label>
-                <input type="text" id="info-school-main" oninput="updateSchoolInfoFromMain(this.value, 'sch')" class="w-full p-2.5 text-xs border-2 border-sky-100 rounded-xl focus:border-sky-500 outline-none font-semibold bg-sky-50/50" placeholder="مثال: الثانوية الإعدادية أنس بن مالك">
+                <input type="text" id="info-school-main" oninput="updateSchoolInfoFromMain(this.value, 'sch')" class="w-full p-2.5 text-xs border-2 border-sky-100 rounded-xl focus:border-sky-500 outline-none font-semibold bg-sky-50/50" placeholder="الثانوية الإعدادية أنس بن مالك">
             </div>
             <div>
                 <label for="info-teacher-main" class="block text-xs font-bold text-slate-700 mb-1">اسم الأستاذ(ة):</label>
@@ -267,30 +266,39 @@
         </div>
     </div>
 
-    <!-- Student Registration Section -->
+    <!-- Student Setup with Excel Dropdown -->
     <div id="student-setup" class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-sky-600 mb-6">
-        <h2 class="text-lg font-bold text-sky-900 mb-4 border-b pb-2">إدخال بيانات التلميذ(ة) الجديد(ة)</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <h2 class="text-lg font-bold text-sky-900 mb-4 border-b pb-2">اختيار التلميذ(ة) من لائحة القسم الرسمية</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-                <label for="student-name" class="block font-semibold text-slate-700 mb-1">اسم التلميذ(ة) الكامل:</label>
-                <input type="text" id="student-name" class="w-full p-3 border-2 border-sky-100 rounded-xl focus:border-sky-500 outline-none transition" placeholder="أدخل الاسم والنسب هنا...">
-                <div id="name-error" class="text-red-600 text-xs mt-1 hidden">⚠️ الرجاء إدخال اسم التلميذ(ة) لبدء التقييم</div>
-            </div>
-            <div>
-                <label for="student-class" class="block font-semibold text-slate-700 mb-1">القسم (اختر من القائمة):</label>
-                <select id="student-class" class="w-full p-3 border-2 border-sky-100 rounded-xl focus:border-sky-500 outline-none bg-white font-semibold">
-                    <option value="1/1">1/1</option><option value="1/2">1/2</option><option value="1/3">1/3</option><option value="1/4">1/4</option><option value="1/5">1/5</option><option value="1/6">1/6</option><option value="1/7">1/7</option>
-                    <option value="2/1">2/1</option><option value="2/2">2/2</option><option value="2/3">2/3</option><option value="2/4">2/4</option><option value="2/5">2/5</option><option value="2/6">2/6</option><option value="2/7">2/7</option>
-                    <option value="3/1">3/1</option><option value="3/2">3/2</option><option value="3/3">3/3</option><option value="3/4">3/4</option><option value="3/5">3/5</option><option value="3/6">3/6</option><option value="3/7">3/7</option>
+                <label for="student-class" class="block font-semibold text-slate-700 mb-1">القسم:</label>
+                <select id="student-class" onchange="onClassChange()" class="w-full p-3 border-2 border-sky-100 rounded-xl focus:border-sky-500 outline-none bg-white font-semibold">
+                    <option value="1/1">1/1 (أولى 1)</option><option value="1/2">1/2 (أولى 2)</option><option value="1/3">1/3 (أولى 3)</option><option value="1/4">1/4 (أولى 4)</option><option value="1/5">1/5 (أولى 5)</option><option value="1/6">1/6 (أولى 6)</option>
+                    <option value="2/1">2/1 (ثانية 1)</option><option value="2/2">2/2 (ثانية 2)</option><option value="2/3">2/3 (ثانية 3)</option><option value="2/4">2/4 (ثانية 4)</option><option value="2/5">2/5 (ثانية 5)</option><option value="2/6">2/6 (ثانية 6)</option>
+                    <option value="3/1">3/1 (ثالثة 1)</option><option value="3/2">3/2 (ثالثة 2)</option><option value="3/3">3/3 (ثالثة 3)</option><option value="3/4">3/4 (ثالثة 4)</option><option value="3/5">3/5 (ثالثة 5)</option><option value="3/6">3/6 (ثالثة 6)</option>
                 </select>
             </div>
+
+            <div>
+                <label for="student-select-list" class="block font-semibold text-slate-700 mb-1">اختر التلميذ(ة) من اللائحة:</label>
+                <select id="student-select-list" onchange="onStudentSelectFromList()" class="w-full p-3 border-2 border-amber-200 rounded-xl focus:border-amber-500 outline-none bg-amber-50/40 font-bold text-slate-800">
+                </select>
+            </div>
+
+            <div>
+                <label for="student-name" class="block font-semibold text-slate-700 mb-1">الاسم والنسب الكامل:</label>
+                <input type="text" id="student-name" class="w-full p-3 border-2 border-sky-100 rounded-xl focus:border-sky-500 outline-none transition font-semibold" placeholder="الاسم والنسب يظهر هنا أو ادخله يدوي...">
+                <div id="name-error" class="text-red-600 text-xs mt-1 hidden">⚠️ الرجاء إدخال أو اختيار اسم التلميذ(ة) لبدء التقييم</div>
+            </div>
         </div>
+
         <button onclick="startAssessment()" class="w-full mt-6 bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl shadow-md transition text-lg">
             بدء تمرير الرائز (المرحلة 1: النص القصير LTC) 🚀
         </button>
     </div>
 
-    <!-- Live Assessment View Section -->
+    <!-- Assessment View -->
     <div id="assessment-view" class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-sky-600 mb-6 hidden">
         <div class="flex flex-wrap justify-between items-center gap-2 mb-4 pb-3 border-b border-sky-100">
             <div class="flex items-center gap-2">
@@ -311,7 +319,7 @@
             </select>
         </div>
 
-        <!-- Fluency Timer Controls -->
+        <!-- Fluency Timer -->
         <div id="timer-container" class="bg-sky-50 p-3 rounded-xl border border-sky-200 flex flex-wrap justify-between items-center gap-3 mb-4">
             <div class="flex gap-2 items-center">
                 <button id="start-timer-btn" onclick="toggleTimer()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition">
@@ -329,7 +337,7 @@
 
         <!-- Reading Fluency Section -->
         <div id="reading-section">
-            <p class="text-xs text-slate-600 font-semibold mb-2">💡 انقر على الكلمة التي أخطأ التلميذ(ة) في قراءتها لوضع خط شطب عليها واحتساب الخطأ تلقائياً (تجاهل علامات الترقيم):</p>
+            <p class="text-xs text-slate-600 font-semibold mb-2">💡 انقر على الكلمة التي أخطأ التلميذ(ة) في قراءتها لوضع خط شطب عليها (علامات الترقيم لا تُحتسب ككلمات):</p>
             <div id="word-container" class="bg-slate-50 p-4 rounded-xl border border-sky-200 min-h-[140px] max-h-[320px] overflow-y-auto mb-4 leading-loose"></div>
             
             <!-- Box 1: Reading Stats & Completion Status -->
@@ -380,10 +388,10 @@
             <p id="stage-target-hint" class="text-xs text-sky-700 font-bold mt-1"></p>
         </div>
 
-        <!-- Comprehension Questions Section (Without Tashkeel) -->
+        <!-- Comprehension Questions Section -->
         <div id="comprehension-section" class="hidden bg-sky-50 p-4 rounded-xl border-r-4 border-sky-600 mb-4">
             <h3 class="font-bold text-sky-900 mb-2 flex items-center justify-between flex-wrap gap-2">
-                <span>أسئلة الفهم المباشر والضمني (طرح الأسئلة المحددة في الدليل):</span>
+                <span>أسئلة الفهم المباشر والضمني (بدون تشكيل لسهولة الطرح):</span>
                 <span id="auto-calc-badge" class="bg-sky-700 text-white text-xs px-3 py-1 rounded-full font-bold">
                     شرط التحكم: إجابتان صحيحتان على الأقل ⚡
                 </span>
@@ -419,11 +427,11 @@
 
         <!-- Warning Toast Modal / Box -->
         <div id="validation-warning" class="hidden bg-rose-100 border-2 border-rose-400 text-rose-900 p-3 rounded-xl mb-4 font-bold text-xs md:text-sm flex items-center justify-between gap-2">
-            <span id="validation-warning-text">⚠️ تنبيه: يرجى تحديد حالة قراءة النص أولاً بالضغط على (أكمل القراءة) أو (لم يكمل القراءة)!</span>
+            <span id="validation-warning-text">⚠️ تنبيه: يرجى تحديد حالة قراءة النص أولاً الضغط على (أكمل القراءة) أو (لم يكمل القراءة)!</span>
             <button onclick="document.getElementById('validation-warning').classList.add('hidden')" class="text-rose-700 font-extrabold px-2 py-0.5 hover:bg-rose-200 rounded-md">✕</button>
         </div>
 
-        <!-- Stage Action Buttons -->
+        <!-- Navigation Buttons Bar -->
         <div class="flex flex-wrap justify-between items-center gap-3 mt-6 pt-4 border-t border-sky-100">
             <button onclick="goToPreviousStage()" id="prev-stage-btn" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2.5 rounded-xl transition text-xs md:text-sm flex items-center gap-1">
                 ⬅️ المرحلة السابقة
@@ -518,8 +526,8 @@
     <div id="collective-grid-view" class="bg-white p-4 md:p-6 rounded-2xl shadow-md border-t-4 border-sky-600 mb-6 hidden print-area">
         <div class="print-header-container mb-4 text-center border-b border-sky-200 pb-3">
             <div class="flex flex-wrap justify-between items-center text-xs md:text-sm text-slate-800 font-bold mb-2 p-2 bg-sky-50 rounded-lg border border-sky-200">
-                <span id="print-header-dir">المديرية الإقليمية: غير محددة</span>
-                <span id="print-header-sch">المؤسسة: غير محددة</span>
+                <span id="print-header-dir">المديرية الإقليمية: مديرية اشتوكة آيت باها</span>
+                <span id="print-header-sch">المؤسسة: الثانوية الإعدادية أنس بن مالك</span>
                 <span id="print-header-tch">الأستاذ(ة): غير محدد</span>
             </div>
             <h2 class="print-header-title text-base md:text-lg font-bold text-sky-900 mt-1">
@@ -570,9 +578,9 @@
                 <label for="filter-class" class="text-xs font-bold text-slate-700 mr-2">تصفية حسب القسم:</label>
                 <select id="filter-class" onchange="renderCollectiveGrid()" class="p-1.5 text-xs border border-sky-200 rounded-lg bg-white font-semibold">
                     <option value="ALL">جميع الأقسام</option>
-                    <option value="1/1">1/1</option><option value="1/2">1/2</option><option value="1/3">1/3</option><option value="1/4">1/4</option><option value="1/5">1/5</option><option value="1/6">1/6</option><option value="1/7">1/7</option>
-                    <option value="2/1">2/1</option><option value="2/2">2/2</option><option value="2/3">2/3</option><option value="2/4">2/4</option><option value="2/5">2/5</option><option value="2/6">2/6</option><option value="2/7">2/7</option>
-                    <option value="3/1">3/1</option><option value="3/2">3/2</option><option value="3/3">3/3</option><option value="3/4">3/4</option><option value="3/5">3/5</option><option value="3/6">3/6</option><option value="3/7">3/7</option>
+                    <option value="1/1">1/1</option><option value="1/2">1/2</option><option value="1/3">1/3</option><option value="1/4">1/4</option><option value="1/5">1/5</option><option value="1/6">1/6</option>
+                    <option value="2/1">2/1</option><option value="2/2">2/2</option><option value="2/3">2/3</option><option value="2/4">2/4</option><option value="2/5">2/5</option><option value="2/6">2/6</option>
+                    <option value="3/1">3/1</option><option value="3/2">3/2</option><option value="3/3">3/3</option><option value="3/4">3/4</option><option value="3/5">3/5</option><option value="3/6">3/6</option>
                 </select>
             </div>
 
@@ -589,6 +597,7 @@
             </div>
         </div>
 
+        <!-- Teacher Note Box -->
         <div id="teacher-details-box" class="bg-amber-50/90 border-2 border-amber-300 p-4 rounded-xl mb-4 no-print hidden">
             <h3 class="font-bold text-amber-900 text-xs md:text-sm mb-1 flex items-center gap-1">
                 💡 دليل الأستاذ(ة) لموجبات موضعة التلميذ الحالي:
@@ -635,39 +644,96 @@
 </div>
 
 <script>
-    // Database with audited reading texts and non-diacritized comprehension questions
+    // Official Excel Database extracted from ListEleve_20260920.xlsx
+    const CLASS_STUDENTS_LISTS = {
+        "1/1": [
+            { num: 1, name: "بوالحوت آدم" }, { num: 2, name: "البوخاري وليد" }, { num: 3, name: "الأزمي رميساء" }, { num: 4, name: "اكنشيش ايوب" }, { num: 5, name: "العسكي عائشة" }, { num: 6, name: "ابولوز صفا" }, { num: 7, name: "باعدي احمد" }, { num: 8, name: "بايعيش اسية" }, { num: 9, name: "بلفضيل ايوب" }, { num: 10, name: "بن حيمود حاتم" }, { num: 11, name: "البودرابي محمد" }, { num: 12, name: "بوهادي رضى" }, { num: 13, name: "البرقاوي هبة" }, { num: 14, name: "اشرورو هداية" }, { num: 15, name: "الدود هبة" }, { num: 16, name: "الفكير خولة" }, { num: 17, name: "الهلالي حفصة" }, { num: 18, name: "الكابوسي نهيلة" }, { num: 19, name: "الخالدي عبد العالي" }, { num: 20, name: "الخالدي نجاة" }, { num: 21, name: "الخالدي يوسف" }, { num: 22, name: "الخطابي مريم" }, { num: 23, name: "الخياري زكرياء" }, { num: 24, name: "المرابط وسيم" }, { num: 25, name: "الراجي اسماعيل" }, { num: 26, name: "الزاهيد انوار" }, { num: 27, name: "الزاهيد يونس" }, { num: 28, name: "انجارن ابتسام" }, { num: 29, name: "بن حادوش حفصة" }, { num: 30, name: "الكطابي فاطمة" }, { num: 31, name: "بوصير ريان" }, { num: 32, name: "عكاش مريم" }, { num: 33, name: "الحضري ضياء" }, { num: 34, name: "الصغياير حمزة" }, { num: 35, name: "التوامي صفاء" }, { num: 36, name: "بن جابر اسامة" }, { num: 37, name: "نايت حساين صفاء" }
+        ],
+        "1/2": [
+            { num: 1, name: "فناني سعيد" }, { num: 2, name: "أزوهري أنس" }, { num: 3, name: "الضاوي وئام" }, { num: 4, name: "أومكزار محمد" }, { num: 5, name: "أوتوس خليل" }, { num: 6, name: "ايت بومسعود زكرياء" }, { num: 7, name: "ايت موس اسامة" }, { num: 8, name: "ايت سعيد خديجة" }, { num: 9, name: "ايت حمو ايوب" }, { num: 10, name: "ايت الحسين رضى" }, { num: 11, name: "عليش وسيم" }, { num: 12, name: "اعراص مريم" }, { num: 13, name: "اشهبار عبد العالي" }, { num: 14, name: "اسكار ايمن" }, { num: 15, name: "اطال حسناء" }, { num: 16, name: "ازنكاغ حاتم" }, { num: 17, name: "ازوكواغ دعاء" }, { num: 18, name: "ازوكاغ محمد" }, { num: 19, name: "ازوكاغ يحيى" }, { num: 20, name: "ازواغ عبد المغيث" }, { num: 21, name: "بابا ايمن" }, { num: 22, name: "بليح عماد" }, { num: 23, name: "بن ساسي ايت علا انس" }, { num: 24, name: "بوركبة يوسف" }, { num: 25, name: "بوطويل محمد عادل" }, { num: 26, name: "بوعلي حفصة" }, { num: 27, name: "اشرورو يوسف" }, { num: 28, name: "الغلاسي يونس" }, { num: 29, name: "القاسمي وائل" }, { num: 30, name: "الهواري خديجة" }, { num: 31, name: "المزابي وئام" }, { num: 32, name: "الكابوسي دعاء" }, { num: 33, name: "امغار مروة" }, { num: 34, name: "منير هجر" }, { num: 35, name: "تالمست مريم" }, { num: 36, name: "ايت الحسين محمد" }, { num: 37, name: "نايت حدو منصف" }
+        ],
+        "1/3": [
+            { num: 1, name: "البوشبتي سيف الدين" }, { num: 2, name: "الزمزومي فردوس" }, { num: 3, name: "لكريمي مصعب" }, { num: 4, name: "شقرون سعد" }, { num: 5, name: "احربيل ادم" }, { num: 6, name: "ايت العسري سلمى" }, { num: 7, name: "ايت الخادير عماد" }, { num: 8, name: "ايت بن علي مروة" }, { num: 9, name: "ايت بوجمعة احمد" }, { num: 10, name: "ايت حنيني اية" }, { num: 11, name: "ايت سى احماد زكرياء" }, { num: 12, name: "اعباسي سلمى" }, { num: 13, name: "الكراب اسامة" }, { num: 14, name: "العابد خديجة" }, { num: 15, name: "البصير اية" }, { num: 16, name: "الحيان رحاب" }, { num: 17, name: "الحاج زياد" }, { num: 18, name: "الكثيري انوار" }, { num: 19, name: "المودن يوسف" }, { num: 20, name: "المرابط محمد" }, { num: 21, name: "المسعودي هدى" }, { num: 22, name: "الورات هداية" }, { num: 23, name: "الزاوش يوسف" }, { num: 24, name: "اموزون مروى" }, { num: 25, name: "انجام دعاء" }, { num: 26, name: "انجارن نهيلة" }, { num: 27, name: "اصاب شادي" }, { num: 28, name: "اسرير رضى" }, { num: 29, name: "اتوزالت نورة" }, { num: 30, name: "ازوكاغ زكرياء" }, { num: 31, name: "عنيبة حاتم" }, { num: 32, name: "لكنزاوي رحاب" }, { num: 33, name: "مومني خديجة" }, { num: 34, name: "ايت بلحاج احمد" }, { num: 35, name: "نايت طالب سلمى" }, { num: 36, name: "اعرو زكرياء" }, { num: 37, name: "نايت الطالب فاطمة الزهراء" }
+        ],
+        "1/4": [
+            { num: 1, name: "الشتوي مهدي" }, { num: 2, name: "احشوش فاطمة" }, { num: 3, name: "ايت بها سعد" }, { num: 4, name: "ايت باها فاطمة الزهراء" }, { num: 5, name: "ايت مبارك وئام" }, { num: 6, name: "ايت زكرا يوسف" }, { num: 7, name: "عليش رضى" }, { num: 8, name: "علوي عبد السلام" }, { num: 9, name: "اعبي مريم" }, { num: 10, name: "العوني سارة" }, { num: 11, name: "الحسني خديجة" }, { num: 12, name: "الكارحي مريم" }, { num: 13, name: "المنصور محمد صابر" }, { num: 14, name: "المرابط عبد الرحمان" }, { num: 15, name: "الوردي سارة" }, { num: 16, name: "الزويتن رضوان" }, { num: 17, name: "امزيل صفاء" }, { num: 18, name: "انوش مهدي" }, { num: 19, name: "اصفر ادم" }, { num: 20, name: "اسكور ادم" }, { num: 21, name: "اطيار صلاح الدين" }, { num: 22, name: "ازواغ عبد الجليل" }, { num: 23, name: "باحوس ياسر" }, { num: 24, name: "باقس مريم" }, { num: 25, name: "بلحاج محمد امين" }, { num: 26, name: "بلقاضي اسامة" }, { num: 27, name: "بوشاطر يحيى" }, { num: 28, name: "بوزكراوي محمد" }, { num: 29, name: "بوطرق مروان" }, { num: 30, name: "بيزي وسيم" }, { num: 31, name: "ايت اومغار هبة" }, { num: 32, name: "الرحالي رضى" }, { num: 33, name: "الصغياير اية" }, { num: 34, name: "الصالحي سلمى" }, { num: 35, name: "منير مريم" }, { num: 36, name: "أيت المودن عماد" }, { num: 37, name: "وريس يونس" }
+        ],
+        "1/5": [
+            { num: 1, name: "أوتزاط أسامة" }, { num: 2, name: "أحمد أوبا يوسف" }, { num: 3, name: "احربيل انس" }, { num: 4, name: "ايت حدو مروى" }, { num: 5, name: "ايت ابراهيم منيرة" }, { num: 6, name: "ايت القاضي حفصة" }, { num: 7, name: "ايت مسعود منصف" }, { num: 8, name: "ايت اوعكي محمد" }, { num: 9, name: "ايت سعيد صفاء" }, { num: 10, name: "اخربيش خديجة" }, { num: 11, name: "العمري جنات" }, { num: 12, name: "العسكي ليلى" }, { num: 13, name: "الفكير خديجة" }, { num: 14, name: "الحوات نسرين" }, { num: 15, name: "الحيان مروة" }, { num: 16, name: "الكابوسي عبد الله" }, { num: 17, name: "المزابي رضى" }, { num: 18, name: "المودن عبد الغفور" }, { num: 19, name: "الراحي حليمة" }, { num: 20, name: "السافات زكرياء" }, { num: 21, name: "الزاوي حسناء" }, { num: 22, name: "انجارن صفاء" }, { num: 23, name: "باعدي فاطمة الزهراء" }, { num: 24, name: "بن براهيم عبد الرحيم" }, { num: 25, name: "بنعلي معاذ" }, { num: 26, name: "بوعودة وائل" }, { num: 27, name: "بوهادي ادم" }, { num: 28, name: "حيمود ايوب" }, { num: 29, name: "لشهب وسيم" }, { num: 30, name: "مسير مريم" }, { num: 31, name: "اولحيان وائل" }, { num: 32, name: "رحوتي محمد" }, { num: 33, name: "زربوح فاطمة" }, { num: 34, name: "الخالدي رحاب" }, { num: 35, name: "ازوكاغ محمد" }, { num: 36, name: "تاوريرت نهيلة" }, { num: 37, name: "توش نتكديدت نهيلة" }
+        ],
+        "1/6": [
+            { num: 1, name: "أدحيل فاطمة الزهراء" }, { num: 2, name: "أومراس خديجة" }, { num: 3, name: "أوعقى مهدي" }, { num: 4, name: "احربيل نصر الدين" }, { num: 5, name: "ايت بركة هدى" }, { num: 6, name: "ايت حدوش خديجة" }, { num: 7, name: "ايت وابل هداية" }, { num: 8, name: "ايت صالح سعد الدين" }, { num: 9, name: "اعبيد مريم" }, { num: 10, name: "العمري يوسف" }, { num: 11, name: "العصمي زياد" }, { num: 12, name: "الغرابي عبد الله" }, { num: 13, name: "المهيوي ريان" }, { num: 14, name: "المرابط عبد المغيث" }, { num: 15, name: "المرابط مروة" }, { num: 16, name: "امزيل سلمى" }, { num: 17, name: "انكادي عبد العزيز" }, { num: 18, name: "اسليم ايمان" }, { num: 19, name: "باعدي مهدي" }, { num: 20, name: "باحوس عماد" }, { num: 21, name: "باكر خديجة" }, { num: 22, name: "بن حدوش وصال" }, { num: 23, name: "بوشاطر مروة" }, { num: 24, name: "بوقلاعة يحيى" }, { num: 25, name: "بوكيو مريم" }, { num: 26, name: "بومزراك ريان" }, { num: 27, name: "شبان اكرام" }, { num: 28, name: "لكريمي محمد" }, { num: 29, name: "لكنزاوي يوسف" }, { num: 30, name: "مومني حاتم" }, { num: 31, name: "الضاوي وائل" }, { num: 32, name: "نايت احسين يوسف" }, { num: 33, name: "نايت باها حمزة" }, { num: 34, name: "الداودي ايمان" }, { num: 35, name: "نايت حمو يوسف" }, { num: 36, name: "وعموش دعاء" }, { num: 37, name: "واكريم ايوب" }
+        ],
+        "2/1": [
+            { num: 1, name: "أفلا نزهة" }, { num: 2, name: "أبراغ إبتسام" }, { num: 3, name: "أجبور إحسان" }, { num: 4, name: "أكني رضى" }, { num: 5, name: "أيوب سمر" }, { num: 6, name: "أومكزار دعاء" }, { num: 7, name: "أوتوس مصطفى" }, { num: 8, name: "أوطلبة أدم" }, { num: 9, name: "احربيل معاد" }, { num: 10, name: "ايت حدوش ضياء" }, { num: 11, name: "ايت القاضي نهيلة" }, { num: 12, name: "ايت بومسعود ريان" }, { num: 13, name: "ايت زكرا مريم" }, { num: 14, name: "اشرورو مريم" }, { num: 15, name: "اسكار زياد" }, { num: 16, name: "ازوكاغ رحاب" }, { num: 17, name: "بافاطم مهدي" }, { num: 18, name: "بالحسن ياسمين" }, { num: 19, name: "بن حيمود وئام" }, { num: 20, name: "بومسهول عبد الله" }, { num: 21, name: "البرقاوي حسام" }, { num: 22, name: "الضاوي زكرياء" }, { num: 23, name: "الفكير يوسف" }, { num: 24, name: "الخالدي شيماء" }, { num: 25, name: "المرابط ايوب" }, { num: 26, name: "المرابط صفاء" }, { num: 27, name: "السافات هاجر" }, { num: 28, name: "شحيمت سعد" }, { num: 29, name: "دحو محمد طه" }, { num: 30, name: "فراس جنات" }, { num: 31, name: "حيمود ياسمين" }, { num: 32, name: "لقراشي مهدي" }, { num: 33, name: "لكنزاوي اسية" }, { num: 34, name: "مومني حنان" }, { num: 35, name: "نايت حساين صفاء" }, { num: 36, name: "صالحي حمزة" }
+        ],
+        "2/2": [
+            { num: 1, name: "أنوز أسامة" }, { num: 2, name: "أومكزار فاطمة الزهراء" }, { num: 3, name: "أوعيسى إشراق" }, { num: 4, name: "أيت الحاج هبة" }, { num: 5, name: "أيت القاضي فاطمة" }, { num: 6, name: "أيت المودن سلمى" }, { num: 7, name: "أيت الطالب مريم" }, { num: 8, name: "أيت موسى عماد" }, { num: 9, name: "أيت سعيد هند" }, { num: 10, name: "أيت سى احماد حليمة" }, { num: 11, name: "أيت طالب أسامة" }, { num: 12, name: "أطال خديجة" }, { num: 13, name: "ازوكواغ دعاء" }, { num: 14, name: "بن حادوش عبد الله" }, { num: 15, name: "بومزراك صفية" }, { num: 16, name: "بوصير ريان" }, { num: 17, name: "الدكالي وائل" }, { num: 18, name: "الغلاسي ادم" }, { num: 19, name: "الحيان زياد" }, { num: 20, name: "الحيمر حفصة" }, { num: 21, name: "الكثيري رضى" }, { num: 22, name: "المزابي رضى" }, { num: 23, name: "المودن ابتسام" }, { num: 24, name: "المسعودي عبد الباري" }, { num: 25, name: "الزاوي اسية" }, { num: 26, name: "الزاوش هجر" }, { num: 27, name: "انجارن خديجة" }, { num: 28, name: "عنيبة حمزة" }, { num: 29, name: "فاكر عبد الرحمان" }, { num: 30, name: "لكريمي جنات" }, { num: 31, name: "منير حفصة" }, { num: 32, name: "نايت بها حاتم" }, { num: 33, name: "رحوتي محمد امين" }, { num: 34, name: "زاكي ابتسام" }, { num: 35, name: "العلمي محمد رضى" }
+        ],
+        "2/3": [
+            { num: 1, name: "أوبلا خديجة" }, { num: 2, name: "أودجامن إسماعيل" }, { num: 3, name: "أوهداش ابتسام" }, { num: 4, name: "أوهداش حفصة" }, { num: 5, name: "أومكزار محمد" }, { num: 6, name: "أيت إبراهيم أسامة" }, { num: 7, name: "أيت بن علي هبة" }, { num: 8, name: "أيت وابل خديجة" }, { num: 9, name: "أيت صالح زياد" }, { num: 10, name: "أيت زكرا سلمى" }, { num: 11, name: "أيت موس وسيم" }, { num: 12, name: "أيت حماد مريم" }, { num: 13, name: "أيت حمو نهيلة" }, { num: 14, name: "أشبارو أدم" }, { num: 15, name: "أزرور محمد" }, { num: 16, name: "إشرورو محمد" }, { num: 17, name: "البدوي زياد" }, { num: 18, name: "باعدي مهدي" }, { num: 19, name: "باحوس ليلى" }, { num: 20, name: "بلفضيل انس" }, { num: 21, name: "بن الطالب رحاب" }, { num: 22, name: "بن ساسي ايت علا ضياء" }, { num: 23, name: "بوهادي نهاد" }, { num: 24, name: "بوقلاعة يونس" }, { num: 25, name: "العلوي نسرين" }, { num: 26, name: "العوني وئام" }, { num: 27, name: "القاسمي مهدي" }, { num: 28, name: "الكابوسي مريم" }, { num: 29, name: "انجارن مريم" }, { num: 30, name: "اصاب وائل" }, { num: 31, name: "الكابوسي خديجة" }, { num: 32, name: "لكنزاوي انس" }, { num: 33, name: "نايت بركة رحاب" }, { num: 34, name: "نايت باها محمد" }, { num: 35, name: "نايت الطالب فاطمة الزهراء" }
+        ],
+        "2/4": [
+            { num: 1, name: "أفرداس هاجر" }, { num: 2, name: "أكراش محمد أدم" }, { num: 3, name: "أموزون وائل" }, { num: 4, name: "أنكادي إلهام" }, { num: 5, name: "أوسار مروان" }, { num: 6, name: "أيت العسري مريم" }, { num: 7, name: "أيت الحسين ليلى" }, { num: 8, name: "أيت مسعود إبراهيم" }, { num: 9, name: "أيت سعيد حليمة" }, { num: 10, name: "أيت حماد حاتم" }, { num: 11, name: "أيت احسين فاطمة الزهراء" }, { num: 12, name: "أشهبار هدى" }, { num: 13, name: "أصماد حفصة" }, { num: 14, name: "إبن الحسين أية" }, { num: 15, name: "إنجام مريم" }, { num: 16, name: "باعدي يوسف" }, { num: 17, name: "باحوس ضياء" }, { num: 18, name: "باحوس رضى" }, { num: 19, name: "بلحاج جنات" }, { num: 20, name: "بوشاطر هجر" }, { num: 21, name: "العابد اميمة" }, { num: 22, name: "العرج سعد الدين" }, { num: 23, name: "الخالدي عبد العالي" }, { num: 24, name: "المهيوي زكرياء" }, { num: 25, name: "المرابط يوسف" }, { num: 26, name: "الراجي صفاء" }, { num: 27, name: "اتوزالت هند" }, { num: 28, name: "ازوكاغ محمد" }, { num: 29, name: "ازوكاغ مروة" }, { num: 30, name: "لقراشي ايمن" }, { num: 31, name: "مومني حاتم" }, { num: 32, name: "نايت حدو رضى" }, { num: 33, name: "نايت حمو هيبة" }, { num: 34, name: "نايت حمو يونس" }, { num: 35, name: "تالمست مريم" }
+        ],
+        "2/5": [
+            { num: 1, name: "أبهي زكرياء" }, { num: 2, name: "أحرموش عبد الرحيم" }, { num: 3, name: "أيت الخادير إبراهيم" }, { num: 4, name: "أيت الخادير معاد" }, { num: 5, name: "أيت الخادير نهيلة" }, { num: 6, name: "أيت باها دعاء" }, { num: 7, name: "أيت بركة زياد" }, { num: 8, name: "أيت حنيني حفصة" }, { num: 9, name: "أيت حدوش نورة" }, { num: 10, name: "أيت القاضي إبتسام" }, { num: 11, name: "أيت مسعود وئام" }, { num: 12, name: "أيت عمار شيماء" }, { num: 13, name: "أيت اوعكي عائشة" }, { num: 14, name: "أيت زكرا مروة" }, { num: 15, name: "أيت سعيد معاد" }, { num: 16, name: "أخربيش عبد الرحيم" }, { num: 17, name: "إعراب إبتسام" }, { num: 18, name: "بايعيش هبة" }, { num: 19, name: "بن حادوش خديجة" }, { num: 20, name: "بن سعيد رحاب" }, { num: 21, name: "بوطويل محمد رضا" }, { num: 22, name: "العسكي خديجة" }, { num: 23, name: "الفكير ليلى" }, { num: 24, name: "الكارحي مريم" }, { num: 25, name: "الخالدي عبد العالي" }, { num: 26, name: "الخالدي نجاة" }, { num: 27, name: "المزابي وسيم" }, { num: 28, name: "المرابط عبد المغيث" }, { num: 29, name: "الورات هبة الله" }, { num: 30, name: "الزاوش وصال" }, { num: 31, name: "الزاهيد وصال" }, { num: 32, name: "انجارن خديجة" }, { num: 33, name: "مومني حاتم" }, { num: 34, name: "الصغياير يوسف" }, { num: 35, name: "أيت بوجمعة حاتم" }
+        ],
+        "2/6": [
+            { num: 1, name: "أمنون أية" }, { num: 2, name: "أنوش خديجة" }, { num: 3, name: "أومكزار نصر الله" }, { num: 4, name: "أيت الحاج عبد الهادي" }, { num: 5, name: "أيت بومسعود ليلى" }, { num: 6, name: "أيت صالح سلمى" }, { num: 7, name: "أيت وابل دعاء" }, { num: 8, name: "أيت براهيم وصال" }, { num: 9, name: "أيت لحسن مهدي" }, { num: 10, name: "أيت موسى نهيلة" }, { num: 11, name: "أيت سعيد حفصة" }, { num: 12, name: "أعمار يونس" }, { num: 13, name: "أصماد وئام" }, { num: 14, name: "ازنكاغ مهدي" }, { num: 15, name: "باحوس حليمة" }, { num: 16, name: "بالحسن شيماء" }, { num: 17, name: "باعلي عبد الله" }, { num: 18, name: "بوسليمان نهيلة" }, { num: 19, name: "بوعلي فاطمة الزهراء" }, { num: 20, name: "بوهادي سلمى" }, { num: 21, name: "بيزي رحاب" }, { num: 22, name: "العمري جنات" }, { num: 23, name: "العصمي اسية" }, { num: 24, name: "المهيوي ريان" }, { num: 25, name: "المودن يوسف" }, { num: 26, name: "المرابط مريم" }, { num: 27, name: "السافات حفصة" }, { num: 28, name: "الشعبي ايوب" }, { num: 29, name: "دحو يحيى" }, { num: 30, name: "دراب وائل" }, { num: 31, name: "حدوش شيماء" }, { num: 32, name: "لكريمي محمد" }, { num: 33, name: "نايت طالب ادم" }, { num: 34, name: "زاكي هداية" }, { num: 35, name: "مومن اسامة" }
+        ],
+        "3/1": [
+            { num: 1, name: "أومكزار محمد" }, { num: 2, name: "أومكزار سعد" }, { num: 3, name: "أوعقى مهدي" }, { num: 4, name: "أيت العسري نجاة" }, { num: 5, name: "أيت العسري وائل" }, { num: 6, name: "أيت حنيني عبد الصمد" }, { num: 7, name: "أيت القاضي دعاء" }, { num: 8, name: "أيت وابل خديجة" }, { num: 9, name: "أيت سعيد حليمة" }, { num: 10, name: "أيت سعيد زكرياء" }, { num: 11, name: "أيت سي احماد حليمة" }, { num: 12, name: "إبن الحسين أدم" }, { num: 13, name: "إسكار مهدي" }, { num: 14, name: "باحوس سعد" }, { num: 15, name: "باكر دعاء" }, { num: 16, name: "باعدي مهدي" }, { num: 17, name: "بليح نورة" }, { num: 18, name: "بن حدوش فاطمة الزهراء" }, { num: 19, name: "بوزكراوي محمد" }, { num: 20, name: "البرقاوي حسام" }, { num: 21, name: "الضاوي رحاب" }, { num: 22, name: "الضاوي ياسين" }, { num: 23, name: "الخالدي عبد العالي" }, { num: 24, name: "المهيوي خديجة" }, { num: 25, name: "المرابط يوسف" }, { num: 26, name: "الورات هبة الله" }, { num: 27, name: "الزاوي حسناء" }, { num: 28, name: "انجارن خديجة" }, { num: 29, name: "فراس جنات" }, { num: 30, name: "لكريمي جنات" }, { num: 31, name: "لكنزاوي رحاب" }, { num: 32, name: "مومني حاتم" }, { num: 33, name: "نايت باها محمد" }, { num: 34, name: "صالحي حمزة" }, { num: 35, name: "واكريم ايوب" }
+        ],
+        "3/2": [
+            { num: 1, name: "أبو لوز حفصة" }, { num: 2, name: "أنكادي إبراهيم" }, { num: 3, name: "أومكزار نصر الله" }, { num: 4, name: "أيت الحاج هبة" }, { num: 5, name: "أيت بها سعد" }, { num: 6, name: "أيت الخادير إبراهيم" }, { num: 7, name: "أيت بركة زياد" }, { num: 8, name: "أيت بومسعود ليلى" }, { num: 9, name: "أيت لحسن مهدي" }, { num: 10, name: "أيت زكرا مروة" }, { num: 11, name: "أيت موسى عماد" }, { num: 12, name: "أيت حماد حاتم" }, { num: 13, name: "أشبارو أدم" }, { num: 14, name: "أصماد وئام" }, { num: 15, name: "ازنكاغ مهدي" }, { num: 16, name: "البدوي زياد" }, { num: 17, name: "بالحسن شيماء" }, { num: 18, name: "بوشاطر هجر" }, { num: 19, name: "بوهادي سلمى" }, { num: 20, name: "العمري جنات" }, { num: 21, name: "العرج سعد الدين" }, { num: 22, name: "القاسمي مهدي" }, { num: 23, name: "الكابوسي مريم" }, { num: 24, name: "الكارحي مريم" }, { num: 25, name: "المرابط مريم" }, { num: 26, name: "الراجي صفاء" }, { num: 27, name: "الزاوش وصال" }, { num: 28, name: "الزاهيد وصال" }, { num: 29, name: "عنيبة حمزة" }, { num: 30, name: "دحو يحيى" }, { num: 31, name: "حدوش شيماء" }, { num: 32, name: "لقراشي ايمن" }, { num: 33, name: "منير حفصة" }, { num: 34, name: "نايت بها حاتم" }, { num: 35, name: "نايت طالب ادم" }
+        ],
+        "3/3": [
+            { num: 1, name: "أفلا نزهة" }, { num: 2, name: "أحمد أوبا يوسف" }, { num: 3, name: "أموزون وائل" }, { num: 4, name: "أيت حدوش ضياء" }, { num: 5, name: "أيت القاضي إبتسام" }, { num: 6, name: "أيت مسعود إبراهيم" }, { num: 7, name: "أيت اوعكي عائشة" }, { num: 8, name: "أيت سعيد حفصة" }, { num: 9, name: "أيت سعيد هند" }, { num: 10, name: "أصماد حفصة" }, { num: 11, name: "إعراب إبتسام" }, { num: 12, name: "إنجام مريم" }, { num: 13, name: "باعدي يوسف" }, { num: 14, name: "باحوس ضياء" }, { num: 15, name: "باحوس رضى" }, { num: 16, name: "بايعيش هبة" }, { num: 17, name: "بن حادوش خديجة" }, { num: 18, name: "بن سعيد رحاب" }, { num: 19, name: "بوطويل محمد رضا" }, { num: 20, name: "العسكي خديجة" }, { num: 21, name: "الفكير ليلى" }, { num: 22, name: "الحيان زياد" }, { num: 23, name: "الحيمر حفصة" }, { num: 24, name: "المزابي وسيم" }, { num: 25, name: "المودن ابتسام" }, { num: 26, name: "المرابط عبد المغيث" }, { num: 27, name: "السافات حفصة" }, { num: 28, name: "اتوزالت هند" }, { num: 29, name: "ازوكاغ محمد" }, { num: 30, name: "ازوكاغ مروة" }, { num: 31, name: "دراب وائل" }, { num: 32, name: "لكريمي محمد" }, { num: 33, name: "نايت حمو هيبة" }, { num: 34, name: "نايت حمو يونس" }, { num: 35, name: "زاكي هداية" }
+        ],
+        "3/4": [
+            { num: 1, name: "أبراغ إبتسام" }, { num: 2, name: "أكني رضى" }, { num: 3, name: "أنوز أسامة" }, { num: 4, name: "أودجامن إسماعيل" }, { num: 5, name: "أوهداش ابتسام" }, { num: 6, name: "أيت إبراهيم أسامة" }, { num: 7, name: "أيت بن علي هبة" }, { num: 8, name: "أيت الخادير نهيلة" }, { num: 9, name: "أيت وابل دعاء" }, { num: 10, name: "أيت القاضي نهيلة" }, { num: 11, name: "أيت بومسعود ريان" }, { num: 12, name: "أيت زكرا سلمى" }, { num: 13, name: "أيت زكرا مريم" }, { num: 14, name: "أيت موس وسيم" }, { num: 15, name: "أزرور محمد" }, { num: 16, name: "بالحسن ياسمين" }, { num: 17, name: "بن الطالب رحاب" }, { num: 18, name: "بومسهول عبد الله" }, { num: 19, name: "بوصير ريان" }, { num: 20, name: "بوقلاعة يونس" }, { num: 21, name: "الدكالي وائل" }, { num: 22, name: "العلوي نسرين" }, { num: 23, name: "العوني وئام" }, { num: 24, name: "الفكير يوسف" }, { num: 25, name: "الكثيري رضى" }, { num: 26, name: "المزابي رضى" }, { num: 27, name: "المرابط ايوب" }, { num: 28, name: "المرابط صفاء" }, { num: 29, name: "الشعبي ايوب" }, { num: 30, name: "اصاب وائل" }, { num: 31, name: "فاكر عبد الرحمان" }, { num: 32, name: "لكنزاوي انس" }, { num: 33, name: "نايت بركة رحاب" }, { num: 34, name: "رحوتي محمد امين" }, { num: 35, name: "مومن اسامة" }
+        ],
+        "3/5": [
+            { num: 1, name: "أجبور إحسان" }, { num: 2, name: "أوبلا خديجة" }, { num: 3, name: "أوهداش حفصة" }, { num: 4, name: "أوعيسى إشراق" }, { num: 5, name: "أيت باها دعاء" }, { num: 6, name: "أيت حنيني حفصة" }, { num: 7, name: "أيت حدوش نورة" }, { num: 8, name: "أيت مسعود وئام" }, { num: 9, name: "أيت عمار شيماء" }, { num: 10, name: "أيت القاضي فاطمة" }, { num: 11, name: "أيت المودن سلمى" }, { num: 12, name: "أيت الطالب مريم" }, { num: 13, name: "أيت حماد مريم" }, { num: 14, name: "أيت سى احماد حليمة" }, { num: 15, name: "أيت طالب أسامة" }, { num: 16, name: "إشرورو محمد" }, { num: 17, name: "باعدي مهدي" }, { num: 18, name: "باحوس ليلى" }, { num: 19, name: "باعلي عبد الله" }, { num: 20, name: "بلفضيل انس" }, { num: 21, name: "بن حيمود وئام" }, { num: 22, name: "بن ساسي ايت علا ضياء" }, { num: 23, name: "بومزراك صفية" }, { num: 24, name: "بوهادي نهاد" }, { num: 25, name: "الضاوي زكرياء" }, { num: 26, name: "الغلاسي ادم" }, { num: 27, name: "الخالدي شيماء" }, { num: 28, name: "المسعودي عبد الباري" }, { num: 29, name: "الزاوي اسية" }, { num: 30, name: "الزاوش هجر" }, { num: 31, name: "انجارن مريم" }, { num: 32, name: "الكابوسي خديجة" }, { num: 33, name: "حيمود ياسمين" }, { num: 34, name: "لقراشي مهدي" }, { num: 35, name: "زاكي ابتسام" }
+        ],
+        "3/6": [
+            { num: 1, name: "أوتوس مصطفى" }, { num: 2, name: "أوطلبة أدم" }, { num: 3, name: "أفرداس هاجر" }, { num: 4, name: "أكراش محمد أدم" }, { num: 5, name: "أمنون أية" }, { num: 6, name: "أنوش خديجة" }, { num: 7, name: "أنكادي إلهام" }, { num: 8, name: "أوسار مروان" }, { num: 9, name: "أيت العسري مريم" }, { num: 10, name: "أيت الحاج عبد الهادي" }, { num: 11, name: "أيت الخادير معاد" }, { num: 12, name: "أيت براهيم وصال" }, { num: 13, name: "أيت الحسين ليلى" }, { num: 14, name: "أيت حمو نهيلة" }, { num: 15, name: "أيت احسين فاطمة الزهراء" }, { num: 16, name: "أشبارو أدم" }, { num: 17, name: "أشهبار هدى" }, { num: 18, name: "أعمار يونس" }, { num: 19, name: "أخربيش عبد الرحيم" }, { num: 20, name: "أطال خديجة" }, { num: 21, name: "ازوكواغ دعاء" }, { num: 22, name: "إبن الحسين أية" }, { num: 23, name: "بلحاج جنات" }, { num: 24, name: "بن حادوش عبد الله" }, { num: 25, name: "بوسليمان نهيلة" }, { num: 26, name: "بوعلي فاطمة الزهراء" }, { num: 27, name: "بيزي رحاب" }, { num: 28, name: "العابد اميمة" }, { num: 29, name: "العصمي اسية" }, { num: 30, name: "المهيوي ريان" }, { num: 31, name: "المودن يوسف" }, { num: 32, name: "السافات هاجر" }, { num: 33, name: "شحيمت سعد" }, { num: 34, name: "دحو محمد طه" }, { num: 35, name: "لكنزاوي اسية" }
+        ]
+    };
+
     const OFFICIAL_DATABASE = {
         short: [
             {
                 id: 1,
                 title: "النص القصير 1",
-                text: "لَيْسَ فِي مَقْدُورِ كُلِّ تِلْمِيذٍ فِي الْقِسْمِ أَنْ يُكَوِّنَ مَكْتَبَةً، لِذَلِكَ اقْتَرَحَ الْأُسْتَاذُ عَلَى التَّلَامِيذِ أَنْ يَجْتَمِعُوا لِلْبَحْثِ عَنْ أَنْجَعِ وَسِيلَةٍ لإحداثها؛ فَعَقَدُوا أَوَّلَ جَلْسَةٍ، وَبَعْدَ نِقَاشٍ مُسْتَفِيضٍ اتَّفَقُوا بِالْإِجْمَاعِ عَلَى أَنْ يُسْهِمَ كُلُّ تِلْمِيذٍ بِكِتَابٍ. وَفِي الْغَدِ جَلَبَ كُلُّ وَاحِدٍ أَعَزَّ كِتَابٍ لَدَيْهِ، فَأَصْبَحَ عَدَدُ الْكُتُبِ ثَلَاثِينَ، وَهَكَذَا تَغَلَّبُوا عَلَى مُشْكِلِ تَجْهِيزِ الْمَكْتَبَةِ بِتَعَاوُنِهِمْ. بَقِيَ عَلَى التَّلَامِيذِ أَنْ يُنَظِّمُوهَا وَيُسَيِّرُوهَا، فَاجْتَمَعُوا مَرَّةً أُخْرَى، وَقَسَّمُوا الْأَعْمَالَ بَيْنَ مَجْمُوعَةٍ بَيْنَهُمْ: أَحْمَدُ يَتَوَلَّى تَسْجِيلَ الْكُتُبِ فِي دَفْتَرٍ خَاصٍّ لِمَعْرِفَةِ عَدَدِهَا وَعَنَاوِينِهَا. وَتَوْفِيقٌ وَزَيْنَبُ يَسْهَرَانِ عَلَى تَرْتِيبِهَا عَلَى الرُّفُوفِ: كُتُبُ الْقِصَصِ فِي جِهَةٍ، وَكُتُبُ التَّارِيخِ فِي جِهَةٍ ثَانِيَةٍ، وَكُتُبُ الْعُلُومِ فِي جِهَةٍ ثَالِثَةٍ. أَمَّا أَسْمَاءُ وَإِسْمَاعِيلُ فَانْحَصَرَتْ مُهِمَّتُهُمَا فِي ضَبْطِ سِجِلِّ إِعَارَةِ الْكُتُبِ لِلْقُرَّاءِ. وَبَعْدَئِذٍ أَقْبَلَ التَّلَامِيذُ عَلَى اسْتِعَارَةِ الْكُتُبِ وَمُطَالَعَتِهَا.",
+                text: "لَيْسَ فِي مَقْدُورِ كُلِّ تِلْمِيذٍ فِي الْقِسْمِ أَنْ يُكَوِّنَ مَكْتَبَةً، لِذَلِكَ اقْتَرَحَ الْأُسْتَاذُ عَلَى التَّلَامِيذِ أَنْ يَجْتَمِعُوا لِلْبَحْثِ عَنْ أَنْجَعِ وَسِيلَةٍ لإحداثها ؛ فَعَقَدُوا أَوَّلَ جَلْسَةٍ، وَبَعْدَ نِقَاشٍ مُسْتَفِيضٍ اتَّفَقُوا بِالْإِجْمَاعِ عَلَى أَنْ يُسْهِمَ كُلُّ تِلْمِيذٍ بِكِتَابٍ. وَفِي الْغَدِ جَلَبَ كُلُّ وَاحِدٍ أَعَزَّ كِتَابٍ لَدَيْهِ، فَأَصْبَحَ عَدَدُ الْكُتُبِ ثَلَاثِينَ، وَهَكَذَا تَغَلَّبُوا عَلَى مُشْكِلِ تَجْهِيزِ الْمَكْتَبَةِ بِتَعَاوُنِهِمْ. بَقِيَ عَلَى التَّلَامِيذِ أَنْ يُنَظِّمُوهَا وَيُسَيِّرُوهَا ، فَاجْتَمَعُوا مَرَّةً أُخْرَى، وَقَسَّمُوا الْأَعْمَالَ بَيْنَ مَجْمُوعَةٍ بَيْنَهُمْ: أَحْمَدُ يَتَوَلَّى تَسْجِيلَ الْكُتُبِ فِي دَفْتَرٍ خَاصٍّ لِمَعْرِفَةِ عَدَدِهَا وَعَنَاوِينِهَا. وَتَوْفِيقٌ وَزَيْنَبُ يَسْهَرَانِ عَلَى تَرْتِيبِهَا عَلَى الرُّفُوفِ : كُتُبُ الْقِصَصِ فِي جِهَةٍ، وَكُتُبُ التَّارِيخِ فِي جِهَةٍ ثَانِيَةٍ، وَكُتُبُ الْعُلُومِ فِي جِهَةٍ ثَالِثَةٍ. أَمَّا أَسْمَاءُ وَإِسْمَاعِيلُ فَانْحَصَرَتْ مُهِمَّتُهُمَا فِي ضَبْطِ سِجِلِّ إِعَارَةِ الْكُتُبِ لِلْقُرَّاءِ. وَبَعْدَئِذٍ أَقْبَلَ التَّلَامِيذُ عَلَى اسْتِعَارَةِ الْكُتُبِ وَمُطَالَعَتِهَا.",
                 targetWords: 80,
                 questions: [
-                    { id: 1, text: "1. لماذا اقترح الأستاذ على التلاميذ أن يجتمعوا؟", answer: "للبحث عن أنجع وسيلة لإحداث المكتبة." },
-                    { id: 2, text: "2. كيف تغلب التلاميذ على مشكلة تجهيز المكتبة؟", answer: "بتعاونهم عن طريق إسهام كل تلميذ بكتاب." },
+                    { id: 1, text: "1. لماذا اقترح الاستاذ على التلاميذ ان يجتمعوا؟", answer: "للبحث عن انجع وسيلة لاحداث المكتبة." },
+                    { id: 2, text: "2. كيف تغلب التلاميذ على مشكلة تجهيز المكتبة؟", answer: "بتعاونهم عن طريق اسهام كل تلميذ بكتاب." },
                     { id: 3, text: "3. ما هي المهمة التي كلف بها توفيق وزينب؟", answer: "السهر على ترتيب الكتب على الرفوف." },
-                    { id: 4, text: "4. لماذا سجل أحمد الكتب في دفتر خاص؟", answer: "ب. لمعرفة عددها وعناوينها.", options: ["أ. لترتيبها على الرفوف.", "ب. لمعرفة عددها وعناوينها.", "ج. لضبط إعارتها للتلاميذ.", "د. لتقديمها إلى الأستاذ."] },
+                    { id: 4, text: "4. لماذا سجل احمد الكتب في دفتر خاص؟", answer: "ب. لمعرفة عددها وعناوينها.", options: ["أ. لترتيبها على الرفوف.", "ب. لمعرفة عددها وعناوينها.", "ج. لضبط إعارتها للتلاميذ.", "د. لتقديمها إلى الاستاذ."] },
                     { id: 5, text: "5. من تولى ضبط سجل الإعارة؟", answer: "ج. أسماء وإسماعيل.", options: ["أ. أحمد", "ب. توفيق وزينب", "ج. أسماء وإسماعيل", "د. الأستاذ"] }
                 ]
             },
             {
                 id: 2,
                 title: "النص القصير 2",
-                text: "مَسْجِدُ الْقَرَوِيِّينَ بِفَاسَ أَقْدَمُ جَامِعَةٍ إِسْلَامِيَّةٍ فِي الْعَالَمِ، وَقَدْ بُنِيَ عَلَى طِرَازٍ مِنَ الْفَنِّ الْمَغْرِبِيِّ الْأَنْدَلُسِيِّ. دَرَسَ فِيهِ الطَّلَبَةُ عُلُومًا كَثِيرَةً مِنْهَا عُلُومُ الدِّينِ وَاللُّغَةِ وَالْأَدَبِ وَالْفَلْسَفَةِ وَالرِّيَاضِيَّاتِ، وَتَخَرَّجَ مِنْهُ عُلَمَاءُ وَأُدَبَاءُ كَثِيرُونَ خَدَمُوا وَطَنَهُمْ فِي مَجَالَاتٍ مُخْتَلِفَةٍ. وَقَدْ شَارَكَ بَعْضُهُمْ فِي مُقَاوَمَةِ الاحْتِلَالَيْنِ الْفَرَنْسِيِّ وَالْإِسْبَانِيِّ، فَاسْتُشْهِدَ مِنْهُمْ كَثِيرُونَ. وَمُنْذُ بِنَائِهَا، ظَلَّتْ هَذِهِ الْجَامِعَةُ مَقْصِدًا لِطُلَّابِ الْعِلْمِ وَالْمَعْرِفَةِ، فَأَقْبَلُوا عَلَيْهَا مِنْ مُخْتَلِفِ مُدُنِ الْمَغْرِبِ، كَطَنْجَةَ وَسَبْتَةَ وَسَلَا وَمُرَّاكُشَ وَسُوسَ، وَمِنَ الصَّحْرَاءِ الْمَغْرِبِيَّةِ، كَمَا جَاءَ إِلَيْهَا طُلَّابٌ مِنْ بُلْدَانٍ أُخْرَى، كَالْأَنْدَلُسِ وَمُورِيتَانِيَا وَالْجَزَائِرِ وَتُونُسَ وَلِيبْيَا وَأُورُوبَّا. وَقَدْ تَطَوَّرَتِ الدِّرَاسَةُ بِهَا عَبْرَ التَّارِيخِ، وَمِنْ أَهَمِّ ذَلِك التَّنْظِيمُ الَّذِي أَمَرَ بِهِ الْمَغْفُورُ لَهُ مُحَمَّدٌ الْخَامِسُ؛ إِذْ قَسَّمَ التَّعْلِيمَ فِيهَا إِلَى ثَلَاثِ مَرَاحِلَ: ابْتِدَائِيَّةٍ وَثَانَوِيَّةٍ وَعَالِيَةٍ، لِتُوَاكِبَ النَّهْضَةَ الْعِلْمِيَّةَ الْحَدِيثَةَ.",
+                text: "مَسْجِدُ الْقَرَوِيِّينَ بِفَاسَ أَقْدَمُ جَامِعَةٍ إِسْلَامِيَّةٍ فِي الْعَالَمِ، وَقَدْ بُنِيَ عَلَى طِرَازٍ مِنَ الْفَنِّ الْمَغْرِبِيِّ الْأَنْدَلُسِيِّ. دَرَسَ فِيهِ الطَّلَبَةُ عُلُومًا كَثِيرَةً مِنْهَا عُلُومُ الدِّينِ وَاللُّغَةِ وَالْأَدَبِ وَالْفَلْسَفَةِ وَالرِّيَاضِيَّاتِ، وَتَخَرَّجَ مِنْهُ عُلَمَاءُ وَأُدَبَاءُ كَثِيرُونَ خَدَمُوا وَطَنَهُمْ فِي مَجَالَاتٍ مُخْتَلِفَةٍ. وَقَدْ شَارَكَ بَعْضُهُمْ فِي مُقَاوَمَةِ الاحْتِلَالَيْنِ الْفَرَنْسِيِّ وَالْإِسْبَانِيِّ، فَاسْتُشْهِدَ مِنْهُمْ كَثِيرُونَ. وَمُنْذُ بِنَائِهَا، ظَلَّتْ هَذِهِ الْجَامِعَةُ مَقْصِدًا لِطُلَّابِ الْعِلْمِ وَالْمَعْرِفَةِ، فَأَقْبَلُوا عَلَيْهَا مِنْ مُخْتَلِفِ مُدُنِ الْمَغْرِبِ، كَطَنْجَةَ وَسَبْتَةَ وَسَلَا وَمُرَّاكُشَ وَسُوسَ، وَمِنَ الصَّحْرَاءِ الْمَغْرِبِيَّةِ، كَمَا جَاءَ إِلَيْهَا طُلَّابٌ مِنْ بُلْدَانٍ أُخْرَى، كَالْأَنْدَلُسِ وَمُورِيتَانِيَا وَالْجَزَائِرِ وَتُونُسَ وَلِيبْيَا وَأُورُوبَّا. وَقَدْ تَطَوَّرَتِ الدِّرَاسَةُ بِهَا عَبْرَ التَّارِيخِ، وَمِنْ أَهَمِّ ذَلِك التَّنْظِيمُ الَّذِي أَمَرَ بِهِ الْمَغْفُورُ لَهُ مُحَمَّدٌ الْخَامِسُ؛ إِذْ قَسَّمَ التَّعْلِيمَ فِيهَا إِلَى ثَلَاثِ مَرَاحِلَ : ابْتِدَائِيَّةٍ وَثَانَوِيَّةٍ وَعَالِيَةٍ، لِتُوَاكِبَ النَّهْضَةَ الْعِلْمِيَّةَ الْحَدِيثَةَ.",
                 targetWords: 80,
                 questions: [
                     { id: 1, text: "1. ما العلوم التي درسها الطلبة في مسجد القرويين؟", answer: "علوم الدين واللغة والأدب والفلسفة والرياضيات." },
                     { id: 2, text: "2. من تخرج من مسجد القرويين؟", answer: "علماء وأدباء كثيرون خدموا وطنهم في مجالات مختلفة." },
-                    { id: 3, text: "3. من أين جاء طلاب العلم إلى جامعة القرويين؟", answer: "من مختلف مدن المغرب والصحراء المغربية، ومن بلدان أخرى كالاندلس وموريتانيا والجزائر وتونس وليبيا وأوروبا." },
+                    { id: 3, text: "3. من أين جاء طلاب العلم إلى جامعة القرويين؟", answer: "من مختلف مدن المغرب والصحراء المغربية، ومن بلدان أخرى كالأندلس وموريتانيا والجزائر وتونس وليبيا وأوروبا." },
                     { id: 4, text: "4. ماذا فعل بعض خريجي جامعة القرويين، حسب النص؟", answer: "أ. شاركوا في مقاومة الاحتلال.", options: ["أ. شاركوا في مقاومة الاحتلال.", "ب. أسسوا مدارس جديدة في مختلف المدن.", "ج. التحقوا بجامعات أخرى خارج المغرب.", "د. قسموا التعليم إلى ثلاث مراحل."] },
-                    { id: 5, text: "5. إلى كم مرحلة قسم التعليم في جامعة القرويين؟", answer: "ب. ثلاث مراحل: ابتدائية وثانوية وعالية.", options: ["أ. مرحلتين: ابتدائية وثانوية.", "ب. ثلاث مراحل: ابتدائية وثانوية وعالية.", "ج. اربع مراحل: ابتدائية وثانوية وجامعية وعالية.", "د. خمس مراحل: ابتدائية وإعدادية وثانوية وجامعية وعالية."] }
+                    { id: 5, text: "5. إلى كم مرحلة قسم التعليم في جامعة القرويين؟", answer: "ب. ثلاث مراحل: ابتدائية وثانوية وعالية.", options: ["أ. مرحلتين: ابتدائية وثانوية.", "ب. ثلاث مراحل: ابتدائية وثانوية وعالية.", "ج. أربع مراحل: ابتدائية وثانوية وجامعية وعالية.", "د. خمس مراحل: ابتدائية وإعدادية وثانوية وجامعية وعالية."] }
                 ]
             },
             {
                 id: 3,
                 title: "النص القصير 3",
-                text: "الْإِفْرَاطُ فِي الطَّعَامِ سَبَبُ نِسْبَةٍ كَبِيرَةٍ مِنَ الْأَمْرَاضِ الَّتِي نَشْكُو مِنْهَا. فَالطَّعَامُ الَّذِي يَزِيدُ عَلَى الْحَاجَةِ يُجْهِدُ الْجِهَازَ الْهَضْمِيَّ وَالْجِسْمَ كُلَّهُ، لِأَنَّهُ يَحْتَاجُ إِلَى قَدْرٍ مِنَ الطَّاقَةِ لِدَفْعِهِ خِلَالَ الطَّرِيقِ الطَّوِيلِ الْمُتَعَرِّجِ دَاخِلَ الْجِسْمِ. وَهُوَ لَا يُؤَدِّي إِلَى اضْطِرَابَاتٍ فِي الْهَضْمِ فَحَسْبُ، بَلْ يُؤَدِّي إِلَى تَرَاكُمِ الشَّحْمِ وَزِيَادَةِ الْوَزْنِ. وَالدَّهْنُ الزَّائِدُ يَتَسَلَّلُ إِلَى أَنْسِجَةِ الْعَضَلَاتِ، وَمِنْهَا عَضَلَةُ الْقَلْبِ، فَيُسَبِّبُ لَهَا ارْتِخَاءً وَضَعْفًا، وَيُهَيِّئُ الطَّرِيقَ لِأَمْرَاضٍ كَالسُّكَّرِيِّ وَتَصَلُّبِ الشَّرَابِينِ. وَتَقِلُّ حَاجَةُ الْجِسْمِ إِلَى الطَّعَامِ كُلَّمَا تَقَدَّمَ الْمَرْءُ فِي السِّنِّ، فَيَنْبَغِي أَنْ يُعَدِّلَ كَمِيَّاتِهِ وَأَنْوَاعَهُ. يُوجَدُ فِي الْجِسْمِ جِهَازٌ يُثِيرُ فِينَا الْإِحْسَاسَ بِالْجُوعِ عِنْدَ الْحَاجَةِ إِلَى الْغِذَاءِ، وَيُنَبِّهُنَا عِنْدَ الشَّبَعِ. وَلَكِنَّ تَعَوُّدَنَا الْإِفْرَاطَ فِي الْأَكْلِ يُبَلِّدُ هَذَا الْإِحْسَاسَ. وَمِنْ هُنَا، يَنْبَغِي أَنْ يُغَادِرَ الْمَرْءُ الْمَائِدَةَ وَهُوَ لَا يَزَالُ يُحِسُّ بِالْجُوعِ.",
+                text: "الْإِفْرَاطُ فِي الطَّعَامِ سَبَبُ نِسْبَةٍ كَبِيرَةٍ مِنَ الْأَمْرَاضِ الَّتِي نَشْكُو مِنْهَا . فَالطَّعَامُ الَّذِي يَزِيدُ عَلَى الْحَاجَةِ يُجْهِدُ الْجِهَازَ الْهَضْمِيَّ وَالْجِسْمَ كُلَّهُ، لِأَنَّهُ يَحْتَاجُ إِلَى قَدْرٍ مِنَ الطَّاقَةِ لِدَفْعِهِ خِلَالَ الطَّرِيقِ الطَّوِيلِ الْمُتَعَرِّجِ دَاخِلَ الْجِسْمِ. وَهُوَ لَا يُؤَدِّي إِلَى اضْطِرَابَاتٍ فِي الْهَضْمِ فَحَسْبُ، بَلْ يُؤَدِّي إِلَى تَرَاكُمِ الشَّحْمِ وَزِيَادَةِ الْوَزْنِ. وَالدَّهْنُ الزَّائِدُ يَتَسَلَّلُ إِلَى أَنْسِجَةِ الْعَضَلَاتِ، وَمِنْهَا عَضَلَةُ الْقَلْبِ، فَيُسَبِّبُ لَهَا ارْتِخَاءً وَضَعْفًا، وَيُهَيِّئُ الطَّرِيقَ لِأَمْرَاضٍ كَالسُّكَّرِيِّ وَتَصَلُّبِ الشَّرَابِينِ. وَتَقِلُّ حَاجَةُ الْجِسْمِ إِلَى الطَّعَامِ كُلَّمَا تَقَدَّمَ الْمَرْءُ فِي السِّنِّ، فَيَنْبَغِي أَنْ يُعَدِّلَ كَمِيَّاتِهِ وَأَنْوَاعَهُ. يُوجَدُ فِي الْجِسْمِ جِهَازٌ يُثِيرُ فِينَا الْإِحْسَاسَ بِالْجُوعِ عِنْدَ الْحَاجَةِ إِلَى الْغِذَاءِ ، وَيُنَبِّهُنَا عِنْدَ الشَّبَعِ. وَلَكِنَّ تَعَوُّدَنَا الْإِفْرَاطَ فِي الْأَكْلِ يُبَلِّدُ هَذَا الْإِحْسَاسَ. وَمِنْ هُنَا ، يَنْبَغِي أَنْ يُغَادِرَ الْمَرْءُ الْمَائِدَةَ وَهُوَ لَا يَزَالُ يُحِسُّ بِالْجُوعِ.",
                 targetWords: 80,
                 questions: [
                     { id: 1, text: "1. ما سبب نسبة كبيرة من الأمراض التي نشكو منها؟", answer: "الإفراط في الطعام." },
@@ -682,7 +748,7 @@
             {
                 id: 1,
                 title: "الفقرة 1",
-                text: "التَّغْذِيَةُ الصَّحِيَّةُ هِيَ تَنَاوُلُ أَطْعِمَةٍ مُتَنَوِّعَةٍ وَمُتَوَازِنَةٍ تُزَوِّدُ الْجِسْمَ بِالْعَنَاصِرِ الْغِذَائِيَّةِ الْأَسَاسِيَّةِ الَّتِي يَحْتَاجُهَا لِلنُّمُوِّ وَالْبَقَاءِ. وَتَتَجَلَّى إِيجَابِيَّاتُ التَّغْذِيَةِ الصَّحِيَّةِ فِي تَحْسِينِ صِحَّةِ الْجِسْمِ وَالْعَقْلِ مِنْ خِلَالِ تَعْزِيزِ جِهَازِ الْمَنَاعَةِ، وَتَوْفِيرِ الطَّاقَةِ الْحَيَوِيَّةِ، وَالْوِقَايَةِ مِنَ الْأَمْرَاضِ الْمُزْمِنَةِ. وَفِي الْمُقَابِلِ، يُؤَدِّي سُوءُ التَّغْذِيَةِ وَالْإِفْرَاطُ فِي الْوَجَبَاتِ السَّرِيعَةِ إِلَى الْإِصَابَةِ بِالسُّمْنَةِ، وَأَمْرَاضِ الْقَلْبِ، وَالْخُمُولِ الدَّائِمِ، وَتَأَخُّرِ النُّمُوِّ الْبَدَنِيِّ وَالْعَقْلِيِّ. وَلِتَفَادِي هَذِهِ الْمَخَاطِرِ، يَنْبَغِي تَنَاوُلُ الْخُضْرَاوَاتِ وَالْفَوَاكِهِ، وَشُرْبُ كَمِيَّاتٍ كَافِيَةٍ مِنَ الْمَاءِ، مَعَ الِابْتِعَادِ التَّامِّ عَنِ السُّكَّرِيَّاتِ وَالْمَشْرُوبَاتِ الْغَازِيَّةِ لِضَمَانِ حَيَاةٍ سَلِيمَةٍ.",
+                text: "التَّغْذِيَةُ الصَّحِيَّةُ هِيَ تَنَاوُلُ أَطْعِمَةٍ مُتَنَوِّعَةٍ وَمُتَوَازِنَةٍ تُزَوِّدُ الْجِسْمَ بِالْعَنَاصِرِ الْغِذَائِيَّةِ الْأَسَاسِيَّةِ الَّتِي يَحْتَاجُهَا لِلنُّمُوِّ وَالْبَقَاءِ. وَتَتَجَلَّى إِيجَابِيَّاتُ التَّغْذِيَةِ الصَّحِيَّةِ فِي تَحْسِينِ صِحَّةِ الْجِسْمِ وَالْعَقْلِ مِنْ خِلَالِ تَعْزِيزِ جِهَازِ الْمَنَاعَةِ، وَتَوْفِيرِ الطَّاقَةِ الْحَيَوِيَّةِ، وَالْوِقَايَةِ مِنَ الْأَمْرَاضِ الْمُزْمِنَةِ. وَفِي الْمُقَابِلِ، يُؤَدِّي سُوءُ التَّغْذِيَةِ وَالْإِفْرَاطُ فِي الْوَجَبَاتِ السَّرِيعَةِ إِلَى الْإِصَابَةِ بِالسُّمْنَةِ، وَأَمْرَاضِ الْقَلْبِ، وَالْخُمُولِ الدَّائِمِ، وَتَأَخُّرِ النُّمُوِّ الْبَدَنِيِّ وَالْعَقْلِيِّ. وَلِتَفَادِي هَذِهِ الْمَخَاطِرِ ، يَنْبَغِي تَنَاوُلُ الْخُضْرَاوَاتِ وَالْفَوَاكِهِ، وَشُرْبُ كَمِيَّاتٍ كَافِيَةٍ مِنَ الْمَاءِ ، مَعَ الِابْتِعَادِ التَّامِّ عَنِ السُّكَّرِيَّاتِ وَالْمَشْرُوبَاتِ الْغَازِيَّةِ لِضَمَانِ حَيَاةٍ سَلِيمَةٍ.",
                 targetWords: 70,
                 questions: [
                     { id: 1, text: "1. ما التغذية الصحية؟", answer: "هي تناول أطعمة متنوعة ومتوازنة تزود الجسم بالعناصر الغذائية الأساسية التي يحتاجها للنمو والبقاء." },
@@ -695,12 +761,12 @@
             {
                 id: 2,
                 title: "الفقرة 2",
-                text: "الْأَلْعَابُ الْإِلِكْتُرُونِيَّةُ أَلْعَابٌ تَفَاعُلِيَّةٌ يَتِمُّ تَشْغِيلُهَا عَبْرَ الْأَجْهِزَةِ الذَّكِيَّةِ وَالْحَوَاسِيبِ. وَرَغْمَ دَوْرِهَا الْإِيجَابِيِّ فِي التَّسْلِيَةِ وَالتَّرْفِيهِ وَتَنْمِيَةِ بَعْضِ الْمَهَارَاتِ الذِّهْنِيَّةِ، فَإِنَّ لَهَا مَخَاطِرَ كَثِيرَةً وَمُتَعَدِّدَةً؛ حَيْثُ يُؤَدِّي الْإِفْرَاطُ فِي اسْتِخْدَامِهَا إِلَى عُزْلَةِ الْفَرْدِ عَنْ مُحِيطِهِ الِاجْتِمَاعِيِّ، كَمَا تَتَسَبَّبُ فِي أَضْرَارٍ صِحِيَّةٍ جَسِيمَةٍ، مِثْلَ خُمُولِ الْجِسْمِ، وَضَعْفِ الْبَصَرِ، وَآلَامِ الظَّهْرِ، فَضْلًا عَنْ تَأْثِيرَاتِهَا النَّفْسِيَّةِ، كَزِيَادَةِ السُّلُوكِ الْعُدْوَانِيِّ وَالْقَلَقِ لَدَى الْأَطْفَالِ نَتِيجَةَ بَعْضِ الْأَلْعَابِ الْعَنِيفَةِ. وَتَفَادِيًا لِهَذِهِ الْمَخَاطِرِ، يَنْبَغِي تَحْدِيدُ أَوْقَاتٍ مُعَيَّنَةٍ لِلَّعِبِ لَا تَتَجَاوَزُ السَّاعَةَ الْوَاحِدَةَ يَوْمِيًّا، مَعَ ضَرُورَةِ مَعْرِفَةِ نَوْعِ الْأَلْعَابِ وَمُحْتَوَاهَا.",
+                text: "الْأَلْعَابُ الْإِلِكْتُرُونِيَّةُ أَلْعَابٌ تَفَاعُلِيَّةٌ يَتِمُّ تَشْغِيلُهَا عَبْرَ الْأَجْهِزَةِ الذَّكِيَّةِ وَالْحَوَاسِيبِ. وَرَغْمَ دَوْرِهَا الْإِيجَابِيِّ فِي التَّسْلِيَةِ وَالتَّرْفِيهِ وَتَنْمِيَةِ بَعْضِ الْمَهَارَاتِ الذِّهْنِيَّةِ، فَإِنَّ لَهَا مَخَاطِرَ كَثِيرَةً وَمُتَعَدِّدَةً؛ حَيْثُ يُؤَدِّي الْإِفْرَاطُ فِي اسْتِخْدَامِهَا إِلَى عُزْلَةِ الْفَرْدِ عَنْ مُحِيطِهِ الِاجْتِمَاعِيِّ، كَمَا تَتَسَبَّبُ فِي أَضْرَارٍ صِحِيَّةٍ جَسِيمَةٍ، مِثْلَ خُمُولِ الْجِسْمِ، وَضَعْفِ الْبَصَرِ ، وَآلَامِ الظَّهْرِ، فَضْلًا عَنْ تَأْثِيرَاتِهَا النَّفْسِيَّةِ، كَزِيَادَةِ السُّلُوكِ الْعُدْوَانِيِّ وَالْقَلَقِ لَدَى الْأَطْفَالِ نَتِيجَةَ بَعْضِ الْأَلْعَابِ الْعَنِيفَةِ. وَتَفَادِيًا لِهَذِهِ الْمَخَاطِرِ، يَنْبَغِي تَحْدِيدُ أَوْقَاتٍ مُعَيَّنَةٍ لِلَّعِبِ لَا تَتَجَاوَزُ السَّاعَةَ الْوَاحِدَةَ يَوْمِيًّا، مَعَ ضَرُورَةِ مَعْرِفَةِ نَوْعِ الْأَلْعَابِ وَمُحْتَوَاهَا .",
                 targetWords: 70,
                 questions: [
                     { id: 1, text: "1. ما الألعاب الإلكترونية؟", answer: "ألعاب تفاعلية يتم تشغيلها عبر الأجهزة الذكية والحواسيب." },
                     { id: 2, text: "2. ما الأدوار الإيجابية لهذه الألعاب؟", answer: "التسلية والترفيه وتنمية بعض المهارات الذهنية." },
-                    { id: 3, text: "3. اذكر بعض المخاطر الصحية للألعاب الإلكترونية؟", answer: "خمول الجسم، وظعف البصر، وآلام الظهر." },
+                    { id: 3, text: "3. اذكر بعض المخاطر الصحية للألعاب الإلكترونية؟", answer: "خمول الجسم، وضعف البصر، وآلام الظهر." },
                     { id: 4, text: "4. ما التأثيرات النفسية للألعاب الإلكترونية على الأطفال؟", answer: "أ. زيادة السلوك العدواني والقلق.", options: ["أ. زيادة السلوك العدواني والقلق.", "ب. ضعف النظر وآلام الظهر.", "ج. خمول الجسم وقلة الحركة.", "د. تنمية المهارات الذهنية والترفيه."] },
                     { id: 5, text: "5. كيف يمكن تفادي مخاطر الألعاب الإلكترونية؟", answer: "ج. بتحديد وقت اللعب ومعرفة نوع الألعاب ومحتواها.", options: ["أ. باستعمال الألعاب الإلكترونية في أي وقت.", "ب. باختيار الألعاب العنيفة وتقليل وقت اللعب.", "ج. بتحديد وقت اللعب ومعرفة نوع الألعاب ومحتواها.", "د. بزيادة وقت اللعب لتنمية المهارات الذهنية."] }
                 ]
@@ -708,13 +774,13 @@
             {
                 id: 3,
                 title: "الفقرة 3",
-                text: "بَيْنَمَا كَانَ مَأْمُونٌ يَتَجَوَّلُ مَعَ وَالِدَتِهِ فِي أَزِقَّةِ الْمَدِينَةِ الْقَدِيمَةِ، شَاهَدَ حِمَارًا يَحْمِلُ سِلَعًا ثَقِيلَةً، وَخَلْفَهُ حَمَّالٌ يَضْرِبُهُ بِسَوْطِهِ دُونَ رَحْمَةٍ. تَأَلَّمَ مَأْمُونٌ لِمَنْظَرِ الْحِمَارِ، وَاسْتَغْرَبَ وَحْشِيَّةَ هَذَا الْحَمَّالِ، وَسَأَلَ أُمَّهُ: «لِمَ يُعَامِلُهُ بِهَذِهِ الْقَسْوَةِ؟ أَلَا تَشْعُرُ الْحَيَوَانَاتُ بِالْأَلَمِ مِثْلَنَا؟» أَجَابَتْهُ: «بَلَى يَا وَلَدِي، وَلَكِنَّ بَعْضَ النَّاسِ يَسْتَفِيدُونَ مِنَ الْحَيَوَانَاتِ وَيُسِيؤُونَ إِلَيْهَا. يَجِبُ عَلَيْنَا أَنْ نَرْفُقَ بِهَا وَنُحْسِنَ مُعَامَلَتَهَا، فَهِيَ كَائِنَاتٌ حَيَّةٌ تَشْعُرُ وَتَتَأَلَّمُ، وَمَنْ يَرْحَمْ غَيْرَهُ يَنَلْ رَحْمَةَ اللَّهِ. وَلَا يَجُوزُ لِلْإِنْسَانِ أَنْ يُعَذِّبَهَا أَوْ يُحَمِّلَهَا فَوْقَ طَاقَتِهَا، وَعَلَيْهِ أَنْ يُعَامِلَهَا بِالرَّحْمَةِ وَالرِّفْقِ».",
+                text: "بَيْنَمَا كَانَ مَأْمُونٌ يَتَجَوَّلُ مَعَ وَالِدَتِهِ فِي أَزِقَّةِ الْمَدِينَةِ الْقَدِيمَةِ، شَاهَدَ حِمَارًا يَحْمِلُ سِلَعًا ثَقِيلَةً، وَخَلْفَهُ حَمَّالٌ يَضْرِبُهُ بِسَوْطِهِ دُونَ رَحْمَةٍ. تَأَلَّمَ مَأْمُونٌ لِمَنْظَرِ الْحِمَارِ ، وَاسْتَغْرَبَ وَحْشِيَّةَ هَذَا الْحَمَّالِ ، وَسَأَلَ أُمَّهُ: «لِمَ يُعَامِلُهُ بِهَذِهِ الْقَسْوَةِ؟ أَلَا تَشْعُرُ الْحَيَوَانَاتُ بِالْأَلَمِ مِثْلَنَا ؟» أَجَابَتْهُ: «بَلَى يَا وَلَدِي ، وَلَكِنَّ بَعْضَ النَّاسِ يَسْتَفِيدُونَ مِنَ الْحَيَوَانَاتِ وَيُسِيؤُونَ إِلَيْهَا. يَجِبُ عَلَيْنَا أَنْ نَرْفُقَ بِهَا وَنُحْسِنَ مُعَامَلَتَهَا، فَهِيَ كَائِنَاتٌ حَيَّةٌ تَشْعُرُ وَتَتَأَلَّمُ، وَمَنْ يَرْحَمْ غَيْرَهُ يَنَلْ رَحْمَةَ اللَّهِ. وَلَا يَجُوزُ لِلْإِنْسَانِ أَنْ يُعَذِّبَهَا أَوْ يُحَمِّلَهَا فَوْقَ طَاقَتِهَا ، وَعَلَيْهِ أَنْ يُعَامِلَهَا بِالرَّحْمَةِ وَالرِّفْقِ».",
                 targetWords: 70,
                 questions: [
                     { id: 1, text: "1. أين كان مأمون يتجول مع والدته؟", answer: "في أزقة المدينة القديمة." },
                     { id: 2, text: "2. ماذا كان الحمار يحمل؟", answer: "سلعا ثقيلة." },
-                    { id: 3, text: "3. ماذا كان الحمال يفعل بالحمار؟", answer: "يطربه بسوطه دون رحمة." },
-                    { id: 4, text: "4. بم شعر مأمون حين رأى الحمال يضرب الحمار؟", answer: "ب. تألم لمنظر الحمار.", options: ["أ. خاف من الحمال.", "ب. تألم لمنظر الحمار.", "ج. أشفاق على الحمال.", "د. تعجب من ثقل السلع."] },
+                    { id: 3, text: "3. ماذا كان الحمال يفعل بالحمار؟", answer: "ضربه بسوطه دون رحمة." },
+                    { id: 4, text: "4. بم شعر مأمون حين رأى الحمال يضرب الحمار؟", answer: "ب. تألم لمنظر الحمار.", options: ["أ. خاف من الحمال.", "ب. تألم لمنظر الحمار.", "ج. أشفق على الحمال.", "د. تعجب من ثقل السلع."] },
                     { id: 5, text: "5. ماذا يفعل بعض الناس بالحيوانات، حسب الأم؟", answer: "ج. يستفيدون منها ويسيؤون إليها.", options: ["أ. يرفقون بها ويحسنون إليها.", "ب. يتركونها جائعة في الشوارع.", "ج. يستفيدون منها ويسيؤون إليها.", "د. يبيعونها في الأسواق."] }
                 ]
             }
@@ -723,25 +789,25 @@
             {
                 id: 1,
                 title: "النص المتوسط 1",
-                text: "رَسَتْ بِنَا السَّفِينَةُ عَلَى شَاطِئِ جَزِيرَةٍ مَكْسُوَّةٍ بِالْأَشْجَارِ الْمُثْمِرَةِ. كَانَتِ الْجَزِيرَةُ خَالِيَةً، وَبَيْنَمَا كَانَ رُفَقَائِي يَقْطِفُونَ أَلْوَانَ الْفَوَاكِهِ، جَلَسْتُ تَحْتَ شَجَرَةٍ وَارِفَةِ الظِّلِّ، ثُمَّ اسْتَغْرَقْتُ فِي نَوْمٍ عَمِيقٍ. اسْتَيْقَظْتُ فَلَمْ أَجِدِ السَّفِينَةَ، لَقَدْ أَبْحَرَتْ دُونِي. فَغَضِبْتُ غَضَبًا شَدِيدًا، وَظَلَلْتُ أَبْحَثُ وَسَطَ الْجَزِيرَةِ لَعَلِّي أَجِدُ مَكَانًا آمِنًا أَبِيتُ فِيهِ. فَرَأَيْتُ كُرَةً بَيْضَوِيَّةً كَبِيرَةَ الْحَجْمِ، فَأَخَذْتُ أَطُوفُ حَوْلَهَا. وَفَجْأَةً شَعَرْتُ بِأَنَّ حَاجِزًا حَالَ بَيْنِي وَبَيْنَ الشَّمْسِ، ظَنَنْتُهُ لِأَوَّلِ وَهْلَةٍ سَحَابَةً، لَكِنْ لَمَّا رَفَعْتُ بَصَرِي، وَجَدْتُهُ طَائِرًا ضَخْمًا. حَطَّ هَذَا الطَّائِرُ عَلَى الْكُرَةِ، فَفَهِمْتُ أَنَّهَا بَيْضَتُهُ. وَكَانَتِ الْمَسَافَةُ الَّتِي تَفْصِلُ بَيْنِي وَبَيْنَ سَاقِهِ الَّتِي تُشْبِهُ جِذْعَ الشَّجَرَةِ قَصِيرَةً جِدًّا. نَزَعْتُ عِمَامَتِي، وَرَبَطْتُ بِهَا نَفْسِي إِلَى سَاقِ الطَّائِرِ، وَقَضَيْتُ اللَّيْلَةَ كُلَّهَا عَلَى هَذِهِ الْحَالِ. وَلَمَّا أَشْرَقَ نُورُ الصَّبَاحِ، طَارَ الطَّائِرُ وَأَنَا مُعَلَّقٌ بِهِ، وَحَلَّقَ حَتَّى حَطَّ عَلَى جَزِيرَةٍ أُخْرَى آهِلَةٍ بِالسُّكَّانِ، فَفَككْتُ قَيْدِي، وَهَرْوَلْتُ مُسْرِعًا إِلَى الْمِينَاءِ، حَيْثُ كَانَتْ سَفِينَةٌ أُخْرَى قَادَتْنِي إِلَى بَلْدَتِي.",
+                text: "رَسَتْ بِنَا السَّفِينَةُ عَلَى شَاطِئِ جَزِيرَةٍ مَكْسُوَّةٍ بِالْأَشْجَارِ الْمُثْمِرَةِ. كَانَتِ الْجَزِيرَةُ خَالِيَةً، وَبَيْنَمَا كَانَ رُفَقَائِي يَقْطِفُونَ أَلْوَانَ الْفَوَاكِهِ، جَلَسْتُ تَحْتَ شَجَرَةٍ وَارِفَةِ الظِّيلِّ، ثُمَّ اسْتَغْرَقْتُ فِي نَوْمٍ عَمِيقٍ. اسْتَيْقَظْتُ فَلَمْ أَجِدِ السَّفِينَةَ ، لَقَدْ أَبْحَرَتْ دُونِي. فَغَضِبْتُ غَضَبًا شَدِيدًا ، وَظَلَلْتُ أَبْحَثُ وَسَطَ الْجَزِيرَةِ لَعَلِّي أَجِدُ مَكَانًا آمِنًا أَبِيتُ فِيهِ. فَرَأَيْتُ كُرَةً بَيْضَوِيَّةً كَبِيرَةَ الْحَجْمِ، فَأَخَذْتُ أَطُوفُ حَوْلَهَا . وَفَجْأَةً شَعَرْتُ بِأَنَّ حَاجِزًا حَالَ بَيْنِي وَبَيْنَ الشَّمْسِ، ظَنَنْتُهُ لِأَوَّلِ وَهْلَةٍ سَحَابَةً، لَكِنْ لَمَّا رَفَعْتُ بَصَرِي ، وَجَدْتُهُ طَائِرًا ضَخْمًا . حَطَّ هَذَا الطَّائِرُ عَلَى الْكُرَةِ، فَفَهِمْتُ أَنَّهَا بَيْضَتُهُ. وَكَانَتِ الْمَسَافَةُ الَّتِي تَفْصِلُ بَيْنِي وَبَيْنَ سَاقِهِ الَّتِي تُشْبِهُ جِذْعَ الشَّجَرَةِ قَصِيرَةً جِدًّا. نَزَعْتُ عِمَامَتِي، وَرَبَطْتُ بِهَا نَفْسِي إِلَى سَاقِ الطَّائِرِ ، وَقَضَيْتُ اللَّيْلَةَ كُلَّهَا عَلَى هَذِهِ الْحَالِ. وَلَمَّا أَشْرَقَ نُورُ الصَّبَاحِ، طَارَ الطَّائِرُ وَأَنَا مُعَلَّقٌ بِهِ، وَحَلَّقَ حَتَّى حَطَّ عَلَى جَزِيرَةٍ أُخْرَى آهِلَةٍ بِالسُّكَّانِ، فَفَككْتُ قَيْدِي، وَهَرْوَلْتُ مُسْرِعًا إِلَى الْمِينَاءِ، حَيْثُ كَانَتْ سَفِينَةٌ أُخْرَى قَادَتْنِي إِلَى بَلْدَتِي.",
                 targetWords: 90,
                 questions: [
                     { id: 1, text: "1. أين رست السفينة؟", answer: "على شاطئ جزيرة مكسوة بالأشجار المثمرة." },
                     { id: 2, text: "2. لماذا غضب السارد غضبا شديدا؟", answer: "لأنه استيقظ فلم يجد السفينة، إذ أبحرت دونه." },
                     { id: 3, text: "3. ماذا ظن السارد الحاجز الذي حال بينه وبين الشمس في البداية؟", answer: "ظنه لأول وهلة سحابة." },
-                    { id: 4, text: "4. لماذا أبحرت السفينة دون السارد؟", answer: "ب. لأن رفقاءه لم ينتبهوا إلى غيابه وهو نائم.", options: ["أ. لأن ربان السفينة أراد معاقبته.", "ب. لأن رفقاءه لم ينتبهوا إلى غيابه وهو نائم.", "ج. لأنه طلب منهم أن يبحروا بدونه.", "د. لأن الجزيرة كانت آهلة بالسكان."] },
-                    { id: 5, text: "5. تدل فكرة السارد في ربط نفسه إلى ساق الطائر على أنه:", answer: "ج. ذكي يحسن التصرف في المواقف الصعبة.", options: ["أ. كسول ينتظر من ينقذه.", "ب. خائف عاجز عن التصرف.", "ج. ذكي يحسن التصرف في المواقف الصعبة.", "د. يحب الطيور ويريد الاقتراب منها."] }
+                    { id: 4, text: "4. لماذا أبحرت السفينة دون السارد؟", answer: "ب. لأن رفقاءه لم ينتبهوا إلى غيابه وهو نائم.", options: ["أ. لأن ربان السفينة أراد عقابه.", "ب. لأن رفقاءه لم ينتبهوا إلى غيابه وهو نائم.", "ج. لأنه طلب منهم أن يبحروا بدونه.", "د. لأن الجزيرة كانت أهلة بالسكان."] },
+                    { id: 5, text: "5. تدل فكرة السارد في ربط نفسه إلى ساق الطائر على أنه :", answer: "ج. ذكي يحسن التصرف في المواقف الصعبة.", options: ["أ. كسول ينتظر من ينقذه.", "ب. خائف عاجز عن التصرف.", "ج. ذكي يحسن التصرف في المواقف الصعبة.", "د. يحب الطيور ويريد الاقتراب منها."] }
                 ]
             },
             {
                 id: 2,
                 title: "النص المتوسط 2",
-                text: "التَّوِيزَةُ عَادَةً شَعْبِيَّةٌ مُرْتَبِطَةٌ بِالْمَوْرُوثِ الْأَمَازِيغِيِّ، وَلَا تَزَالُ حَاضِرَةً فِي قُرَى كَثِيرَةٍ بِجِبَالِ الْأَطْلَسِ وَالرِّيفِ وَالْجَنُوبِ. وَهِيَ عَمَلٌ تَطَوُّعِيٌّ يَتَعَاوَنُ فِيهِ سُكَّانُ الدَّوَّارِ، دُونَ أَجْرٍ، لِفَائِدَةِ وَاحِدٍ مِنْهُمْ أَوْ لِفَائِدَةِ الْجَمَاعَةِ كُلِّهَا. وَتَظْهَرُ فِي مُنَاسَبَاتٍ مُخْتَلِفَةٍ، كَحَرْثِ الْأَرْضِ وَحَصَادِهَا، وَبِنَاءِ بَيْتٍ أَوْ مَسْجِدٍ، وَتَنْظِيمِ الْأَعْرَاسِ، وَيُسَاهِمُ فِيهَا كُلُّ فَرْدٍ حَسَبَ قُدْرَتِهِ وَخِبْرَتِهِ. فَفِي مَوْسِمِ الْحَصَادِ، يَمْتَلِئُ الْحَقْلُ مُنْذُ الصَّبَاحِ الْبَاكِرِ بِالرِّجَالِ وَالشَّبَابِ، فَيَصْطَفُونَ فِي صُفُوفٍ مُنَظَّمَةٍ. بَعْضُهُمْ يَقْطَعُ السَّنَابِلَ بِالْمِنْجَلِ، وَبَعْضُهُمْ يَجْمَعُهَا وَيَرْبِطُهَا حُزَمًا، وَآخَرُونَ يَنْقُلُونَهَا إِلَى الْبَيْدَرِ. وَتَرْتَفِعُ أَصْوَاتُ الْأَهَازِيجِ فِي الْمَكَانِ، فَتُشَجِّعُ الْعَامِلِينَ عَلَى مُوَاصَلَةِ الْعَمَلِ. وَفِي الْوَقْتِ نَفْسِهِ، تَتَعَاوَنُ النِّسَاءُ عَلَى إِعْدَادِ الطَّعَامِ وَتَدْبِيرِ مَا يَحْتَاجُ إِلَيْهِ الْعَامِلُونَ. وَعِنْدَ انْتِهَاءِ الْعَمَلِ، يَجْتَمِعُ الْجَمِيعُ فِي الْمَسَاءِ حَوْلَ وَجْبَةٍ جَمَاعِيَّةٍ فِي بَيْتِ صَاحِبِ الْأَرْضِ، وَتُرَافِقُ الْجَلْسَةَ أَغَانٍ وَرَقَصَاتٌ شَعْبِيَّةٌ. وَهَكَذَا تَجْعَلُ التَّوِيزَةُ الْعَمَلَ أَخَفَّ وَأَسْرَعَ، وَتُقَوِّي رَوَابِطَ التَّضَامُنِ بَيْنَ أَفْرَادِ الْجَمَاعَةِ، وَتَنْقُلُ قِيمَ التَّعَاوُنِ مِنْ جِيلٍ إِلَى جِيلٍ.",
+                text: "التَّوِيزَةُ عَادَةً شَعْبِيَّةٌ مُرْتَبِطَةٌ بِالْمَوْرُوثِ الْأَمَازِيغِيِّ، وَلَا تَزَالُ حَاضِرَةً فِي قُرَى كَثِيرَةٍ بِجِبَالِ الْأَطْلَسِ وَالرِّيفِ وَالْجَنُوبِ. وَهِيَ عَمَلٌ تَطَوُّعِيٌّ يَتَعَاوَنُ فِيهِ سُكَّانُ الدَّوَّارِ ، دُونَ أَجْرٍ ، لِفَائِدَةِ وَاحِدٍ مِنْهُمْ أَوْ لِفَائِدَةِ الْجَمَاعَةِ كُلِّهَا . وَتَظْهَرُ فِي مُنَاسَبَاتٍ مُخْتَلِفَةٍ، كَحَرْثِ الْأَرْضِ وَحَصَادِهَا، وَبِنَاءِ بَيْتٍ أَوْ مَسْجِدٍ ، وَتَنْظِيمِ الْأَعْرَاسِ، وَيُسَاهِمُ فِيهَا كُلُّ فَرْدٍ حَسَبَ قُدْرَتِهِ وَخِبْرَتِهِ. فَفِي مَوْسِمِ الْحَصَادِ، يَمْتَلِئُ الْحَقْلُ مُنْذُ الصَّبَاحِ الْبَاكِرِ بِالرِّجَالِ وَالشَّبَابِ، فَيَصْطَفُونَ فِي صُفُوفٍ مُنَظَّمَةٍ. بَعْضُهُمْ يَقْطَعُ السَّنَابِلَ بِالْمِنْجَلِ، وَبَعْضُهُمْ يَجْمَعُهَا وَيَرْبِطُهَا حُزَمًا، وَآخَرُونَ يَنْقُلُونَهَا إِلَى الْبَيْدَرِ . وَتَرْتَفِعُ أَصْوَاتُ الْأَهَازِيجِ فِي الْمَكَانِ، فَتُشَجِّعُ الْعَامِلِينَ عَلَى مُوَاصَلَةِ الْعَمَلِ. وَفِي الْوَقْتِ نَفْسِهِ، تَتَعَاوَنُ النِّسَاءُ عَلَى إِعْدَادِ الطَّعَامِ وَتَدْبِيرِ مَا يَحْتَاجُ إِلَيْهِ الْعَامِلُونَ. وَعِنْدَ انْتِهَاءِ الْعَمَلِ ، يَجْتَمِعُ الْجَمِيعُ فِي الْمَسَاءِ حَوْلَ وَجْبَةٍ جَمَاعِيَّةٍ فِي بَيْتِ صَاحِبِ الْأَرْضِ، وَتُرَافِقُ الْجَلْسَةَ أَغَانٍ وَرَقَصَاتٌ شَعْبِيَّةٌ. وَهَكَذَا تَجْعَلُ التَّوِيزَةُ الْعَمَلَ أَخَفَّ وَأَسْرَعَ، وَتُقَوِّي رَوَابِطَ التَّضَامُنِ بَيْنَ أَفْرَادِ الْجَمَاعَةِ، وَتَنْقُلُ قِيمَ التَّعَاوُنِ مِنْ جِيلٍ إِلَى جِيلٍ.",
                 targetWords: 90,
                 questions: [
                     { id: 1, text: "1. أين ما تزال التويزة حاضرة؟", answer: "في قرى كثيرة بجبال الأطلس والريف والجنوب." },
                     { id: 2, text: "2. ما المناسبات التي تظهر فيها التويزة؟", answer: "حرث الأرض وحصادها، وبناء بيت أو مسجد، وتنظيم الأعراس." },
-                    { id: 3, text: "3. كيف يتوزع الرجال العمل في الحقل؟", answer: "بعضهم يقطع السنابل بالمنجل، وبعضهم يجمعها ويربطها حزما، وآخرون ينقلونها إلى البيدر." },
+                    { id: 3, text: "3. كيف يتوزع الرجال العمل في الحقل؟", answer: "بعضهم يقطع السنابل بالمنجل، وبعضهم يجمعها ويربطها حزما، وآخرون ينقلونها إلى بيدر." },
                     { id: 4, text: "4. نستنتج من قوله: «يساهم فيها كل فرد حسب قدرته وخبرته» أن:", answer: "ب. كل فرد يجد في التويزة دورا يناسبه.", options: ["أ. التويزة خاصة بالأقوياء من أفراد الدوار.", "ب. كل فرد يجد في التويزة دورا يناسبه.", "ج. الجميع يقومون بالعمل نفسه.", "د. الأجر يختلف حسب قدرة كل فرد."] },
                     { id: 5, text: "5. لماذا يصير العمل أخف وأسرع في التويزة؟", answer: "د. لأن الجهد يتوزع على عدد كبير من الأفراد.", options: ["أ. لأن العاملين يستعملون أدوات حديثة.", "ب. لأن العمل يقتصر على المساء.", "ج. لأن الحقول في الجبال صغيرة.", "د. لأن الجهد يتوزع على عدد كبير من الأفراد."] }
                 ]
@@ -749,7 +815,7 @@
             {
                 id: 3,
                 title: "النص المتوسط 3",
-                text: "خَرَجَ ابْنُ بَطُوطَةَ مِنْ مَدِينَتِهِ طَنْجَةَ وَهُوَ شَابٌّ فِي مُقْتَبَلِ الْعُمْرِ، قَاصِدًا أَدَاءَ فَرِيضَةِ الْحَجِّ وَلَمْ يَكُنْ يَعْلَمُ أَنَّ رِحْلَتَهُ سَتَدُومُ نَحْوَ ثَلَاثِينَ سَنَةً، وَأَنَّهَا سَتَجْعَلُ مِنْهُ أَشْهَرَ رَحَّالَةٍ فِي تَارِيخِ الْمَغْرِبِ. فَبَعْدَ أَنْ أَدَّى مَنَاسِكَ الْحَجِّ، دَفَعَهُ حُبُّ الْمَعْرِفَةِ إِلَى مُوَاصَلَةِ السَّفَرِ، فَجَابَ بُلْدَانَ الشَّرْقِ، وَزَارَ مِصْرَ وَالْعِرَاقَ وَالشَّامَ وَبِلَادَ فَارِسَ، ثُمَّ وَصَلَ إِلَى الْهِنْدِ حَيْثُ عَمِلَ قَاضِيًا، وَبَلَغَ الصِّينَ فِي أَقْصَى الشَّرْقِ. وَقَدْ رَكِبَ الْبِحَارَ وَقَطَعَ الصَّحَارِي، وَتَعَرَّضَ لِأَخْطَارٍ كَثِيرَةٍ، لَكِنَّهُ كَانَ يَحْفَظُ كُلَّ مَا يَرَاهُ مِنْ عَادَاتِ الشُّعُوبِ وَعَجَائِبِ الْبُلْدَانِ. وَحِينَ عَادَ إِلَى الْمَغْرِبِ بَعْدَ غَيْبَةٍ طَوِيلَةٍ، أَمَرَ السُّلْطَانُ أَبُو عِنَانٍ الْمَرِينِيُّ كَاتِبَهُ ابْنَ جُزَيٍّ بِتَدْوِينِ أَخْبَارِ هَذِهِ الرِّحْلَةِ حَتَّى لَا تَضِيعَ، فَأَمْلَاهَا عَلَيْهِ ابْنُ بَطُوطَةَ، وَجُمِعَتْ فِي كِتَابٍ سُمِّيَ «تُحْفَةُ النَّظَّارِ فِي غَرَائِبِ الْأَمْصَارِ وَعَجَائِبِ الْأَسْفَارِ». وَقَدْ تُرْجِمَ هَذَا الْكِتَابُ إِلَى لُغَاتٍ عَدِيدَةٍ، وَلَا يَزَالُ إِلَى الْيَوْمِ مَرْجِعًا مُهِمَّا لِمَعْرِفَةِ أَحْوَالِ الْعَالَمِ فِي زَمَانِهِ.",
+                text: "خَرَجَ ابْنُ بَطُوطَةَ مِنْ مَدِينَتِهِ طَنْجَةَ وَهُوَ شَابٌّ فِي مُقْتَبَلِ الْعُمْرِ ، قَاصِدًا أَدَاءَ فَرِيضَةِ الْحَجِّ وَلَمْ يَكُنْ يَعْلَمُ أَنَّ رِحْلَتَهُ سَتَدُومُ نَحْوَ ثَلَاثِينَ سَنَةً، وَأَنَّهَا سَتَجْعَلُ مِنْهُ أَشْهَرَ رَحَّالَةٍ فِي تَارِيخِ الْمَغْرِبِ. فَبَعْدَ أَنْ أَدَّى مَنَاسِكَ الْحَجِّ، دَفَعَهُ حُبُّ الْمَعْرِفَةِ إِلَى مُوَاصَلَةِ السَّفَرِ ، فَجَابَ بُلْدَانَ الشَّرْقِ، وَزَارَ مِصْرَ وَالْعِرَاقَ وَالشَّامَ وَبِلَادَ فَارِسَ، ثُمَّ وَصَلَ إِلَى الْهِنْدِ حَيْثُ عَمِلَ قَاضِيًا ، وَبَلَغَ الصِّينَ فِي أَقْصَى الشَّرْقِ. وَقَدْ رَكِبَ الْبِحَارَ وَقَطَعَ الصَّحَارِي، وَتَعَرَّضَ لِأَخْطَارٍ كَثِيرَةٍ، لَكِنَّهُ كَانَ يَحْفَظُ كُلَّ مَا يَرَاهُ مِنْ عَادَاتِ الشُّعُوبِ وَعَجَائِبِ الْبُلْدَانِ. وَحِينَ عَادَ إِلَى الْمَغْرِبِ بَعْدَ غَيْبَةٍ طَوِيلَةٍ، أَمَرَ السُّلْطَانُ أَبُو عِنَانٍ الْمَرِينِيُّ كَاتِبَهُ ابْنَ جُزَيٍّ بِتَدْوِينِ أَخْبَارِ هَذِهِ الرِّحْلَةِ حَتَّى لَا تَضِيعَ، فَأَمْلَاهَا عَلَيْهِ ابْنُ بَطُوطَةَ، وَجُمِعَتْ فِي كِتَابٍ سُمِّيَ «تُحْفَةُ النَّظَّارِ فِي غَرَائِبِ الْأَمْصَارِ وَعَجَائِبِ الْأَسْفَارِ». وَقَدْ تُرْجِمَ هَذَا الْكِتَابُ إِلَى لُغَاتٍ عَدِيدَةٍ، وَلَا يَزَالُ إِلَى الْيَوْمِ مَرْجِعًا مُهِمَّا لِمَعْرِفَةِ أَحْوَالِ الْعَالَمِ فِي زَمَانِهِ.",
                 targetWords: 90,
                 questions: [
                     { id: 1, text: "1. لماذا واصل ابن بطوطة سفره بعد الحج؟", answer: "دفعه حب المعرفة إلى مواصلة السفر." },
@@ -785,40 +851,6 @@
     let isReadCompleted = null;
     let editingStudentId = null;
 
-    /**
-     * Parse text into structural tokens separating Arabic words from punctuation.
-     * Prevents punctuation marks (dots, commas, semicolons, colons) from being rendered
-     * as clickable word boxes or counted in the total word count.
-     */
-    function parseTextToTokens(rawText) {
-        // Clean up spaces before punctuation marks
-        let cleaned = rawText.replace(/\s+([،؛:؟!.\)\»])/g, '$1');
-        cleaned = cleaned.replace(/([\(\«])\s+/g, '$1');
-        
-        const rawTokens = cleaned.trim().split(/\s+/);
-        const processedTokens = [];
-
-        rawTokens.forEach(part => {
-            // Match leading punctuation, Arabic/word core, and trailing punctuation
-            const match = part.match(/^([^\p{L}\d\u0600-\u06FF]*)([\p{L}\d\u0600-\u06FF\u064B-\u065F\u0670]+)([^\p{L}\d\u0600-\u06FF]*)$/u);
-            if (match) {
-                processedTokens.push({
-                    prefix: match[1],
-                    word: match[2],
-                    suffix: match[3],
-                    isWord: true
-                });
-            } else {
-                processedTokens.push({
-                    text: part,
-                    isWord: false
-                });
-            }
-        });
-
-        return processedTokens;
-    }
-
     function toggleHeaderPanel() {
         const panel = document.getElementById('header-custom-panel');
         const icon = document.getElementById('panel-toggle-icon');
@@ -841,9 +873,9 @@
     }
 
     function applySchoolInfoToUI(info) {
-        document.getElementById('main-header-school-info').textContent = `🏫 ${info.school || 'إعداديات الريادة'} | 📍 ${info.directorate || 'المديرية الإقليمية'} | 👨‍🏫 الأستاذ(ة): ${info.teacher || 'غير محدد'}`;
-        document.getElementById('print-header-dir').textContent = `المديرية الإقليمية: ${info.directorate || 'غير محددة'}`;
-        document.getElementById('print-header-sch').textContent = `المؤسسة: ${info.school || 'غير محددة'}`;
+        document.getElementById('main-header-school-info').textContent = `🏫 ${info.school || 'الثانوية الإعدادية أنس بن مالك'} | 📍 ${info.directorate || 'مديرية اشتوكة آيت باها'} | 👨‍🏫 الأستاذ(ة): ${info.teacher || 'غير محدد'}`;
+        document.getElementById('print-header-dir').textContent = `المديرية الإقليمية: ${info.directorate || 'مديرية اشتوكة آيت باها'}`;
+        document.getElementById('print-header-sch').textContent = `المؤسسة: ${info.school || 'الثانوية الإعدادية أنس بن مالك'}`;
         document.getElementById('print-header-tch').textContent = `الأستاذ(ة): ${info.teacher || 'غير محدد'}`;
     }
 
@@ -873,14 +905,56 @@
                 applySchoolInfoToUI(info);
             } catch (e) {}
         }
+        
+        onClassChange();
         document.getElementById('header-student-count').textContent = studentsList.length;
     };
+
+    function onClassChange() {
+        const cls = document.getElementById('student-class').value;
+        const listSelect = document.getElementById('student-select-list');
+        listSelect.innerHTML = '';
+
+        const optDefault = document.createElement('option');
+        optDefault.value = "";
+        optDefault.textContent = "-- اختر التلميذ(ة) من اللائحة الرسمية --";
+        listSelect.appendChild(optDefault);
+
+        if (CLASS_STUDENTS_LISTS[cls]) {
+            CLASS_STUDENTS_LISTS[cls].forEach(st => {
+                const opt = document.createElement('option');
+                opt.value = st.name;
+                opt.textContent = `${st.num} - ${st.name}`;
+                listSelect.appendChild(opt);
+            });
+        }
+
+        const optManual = document.createElement('option');
+        optManual.value = "__MANUAL__";
+        optManual.textContent = "✏️ إدخال يدوي / تلميذ غير موجود باللائحة...";
+        listSelect.appendChild(optManual);
+
+        document.getElementById('student-name').value = '';
+    }
+
+    function onStudentSelectFromList() {
+        const selectedVal = document.getElementById('student-select-list').value;
+        const nameInput = document.getElementById('student-name');
+
+        if (selectedVal && selectedVal !== "__MANUAL__") {
+            nameInput.value = selectedVal;
+        } else if (selectedVal === "__MANUAL__") {
+            nameInput.value = '';
+            nameInput.focus();
+        }
+    }
 
     function addNewStudent() {
         document.getElementById('student-setup').classList.remove('hidden');
         document.getElementById('assessment-view').classList.add('hidden');
         document.getElementById('collective-grid-view').classList.add('hidden');
         document.getElementById('student-name').value = '';
+        document.getElementById('student-select-list').value = '';
         document.getElementById('name-error').classList.add('hidden');
         
         lastEvaluatedNote = '';
@@ -958,6 +1032,30 @@
         resetTimer();
     }
 
+    // Process text to separate punctuation marks from words
+    function parseTextTokens(rawText) {
+        const tokens = [];
+        const rawWords = rawText.split(/\s+/);
+
+        rawWords.forEach(rw => {
+            const match = rw.match(/^([^\s\.\,؛:\!\؟"«»\(\)]*)([\.\,؛:\!\؟"«»\(\)]*)$/);
+            if (match) {
+                const wordPart = match[1];
+                const punctPart = match[2];
+                if (wordPart) {
+                    tokens.push({ type: 'word', text: wordPart });
+                }
+                if (punctPart) {
+                    tokens.push({ type: 'punct', text: punctPart });
+                }
+            } else {
+                tokens.push({ type: 'word', text: rw });
+            }
+        });
+
+        return tokens;
+    }
+
     function renderStageUI() {
         const config = STAGE_CONFIG[currentStageKey];
         const item = OFFICIAL_DATABASE[config.dbKey][currentSubIndex];
@@ -982,41 +1080,26 @@
             const wordContainer = document.getElementById('word-container');
             wordContainer.innerHTML = '';
             
-            const tokens = parseTextToTokens(item.text);
-            let validWordCount = 0;
+            const tokens = parseTextTokens(item.text);
+            let wordCountTotal = 0;
 
-            tokens.forEach((t) => {
-                if (t.isWord) {
-                    validWordCount++;
-                    if (t.prefix) {
-                        const preSpan = document.createElement('span');
-                        preSpan.className = 'punct-mark';
-                        preSpan.textContent = t.prefix;
-                        wordContainer.appendChild(preSpan);
-                    }
-
-                    const wordSpan = document.createElement('span');
-                    wordSpan.className = 'word-item';
-                    wordSpan.textContent = t.word;
-                    wordSpan.onclick = function() { toggleWordError(wordSpan); };
-                    wordContainer.appendChild(wordSpan);
-
-                    if (t.suffix) {
-                        const sufSpan = document.createElement('span');
-                        sufSpan.className = 'punct-mark';
-                        sufSpan.textContent = t.suffix;
-                        wordContainer.appendChild(sufSpan);
-                    }
+            tokens.forEach((tk) => {
+                if (tk.type === 'word') {
+                    wordCountTotal++;
+                    const span = document.createElement('span');
+                    span.className = 'word-item';
+                    span.textContent = tk.text;
+                    span.onclick = function() { toggleWordError(span); };
+                    wordContainer.appendChild(span);
                 } else {
-                    const punctSpan = document.createElement('span');
-                    punctSpan.className = 'punct-mark';
-                    punctSpan.textContent = t.text;
-                    wordContainer.appendChild(punctSpan);
+                    const spanPunct = document.createElement('span');
+                    spanPunct.className = 'punct-item';
+                    spanPunct.textContent = tk.text;
+                    wordContainer.appendChild(spanPunct);
                 }
             });
 
-            // Set default words read count to total VALID words
-            document.getElementById('words-read').value = validWordCount;
+            document.getElementById('words-read').value = wordCountTotal;
 
             const btnDone = document.getElementById('btn-read-completed');
             const btnNot = document.getElementById('btn-read-incomplete');
@@ -1115,7 +1198,7 @@
             if (currentStageKey === 'LTC') {
                 stageActionHint.innerHTML += ' ⬅️ الانتقال إلى المرحلة 3: طلاقة الفقرة (LP).';
             } else if (currentStageKey === 'LP') {
-                stageActionHint.innerHTML += ' ⬅️ التثبيت في اللبنة 1.';
+                stageActionHint.innerHTML += ' ⬅️ الانتقال إلى المرحلة 4: فهم الفقرة (CP).';
             } else if (currentStageKey === 'LTM') {
                 stageActionHint.innerHTML += ' ⬅️ التثبيت في اللبنة 2.';
             }
@@ -1222,22 +1305,17 @@
         qList.forEach((_, idx) => {
             const btnC = document.getElementById(`q-btn-correct-${idx}`);
             const btnW = document.getElementById(`q-btn-wrong-${idx}`);
-            const btnR = document.getElementById(`q-btn-reset-${idx}`);
+            const state = currentQuestionsState[idx];
 
-            const st = currentQuestionsState[idx];
-
-            if (st.asked && st.correct) {
-                btnC.className = 'bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow transition';
-                btnW.className = 'bg-slate-100 text-slate-400 opacity-50 px-3 py-1.5 rounded-lg text-xs font-bold';
-                btnR.className = 'bg-slate-100 text-slate-500 px-2 py-1.5 rounded-lg text-xs font-bold';
-            } else if (st.asked && !st.correct) {
-                btnC.className = 'bg-slate-100 text-slate-400 opacity-50 px-3 py-1.5 rounded-lg text-xs font-bold';
-                btnW.className = 'bg-rose-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow transition';
-                btnR.className = 'bg-slate-100 text-slate-500 px-2 py-1.5 rounded-lg text-xs font-bold';
+            if (state.asked && state.correct) {
+                btnC.className = 'bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow';
+                btnW.className = 'bg-slate-100 text-slate-500 opacity-50 px-3 py-1.5 rounded-lg text-xs font-bold';
+            } else if (state.asked && !state.correct) {
+                btnC.className = 'bg-slate-100 text-slate-500 opacity-50 px-3 py-1.5 rounded-lg text-xs font-bold';
+                btnW.className = 'bg-rose-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow';
             } else {
                 btnC.className = 'bg-slate-100 hover:bg-emerald-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold transition';
                 btnW.className = 'bg-slate-100 hover:bg-rose-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold transition';
-                btnR.className = 'bg-slate-200 text-slate-700 font-bold px-2 py-1.5 rounded-lg text-xs';
             }
         });
 
@@ -1251,206 +1329,158 @@
         document.getElementById('asked-q-count-display').textContent = `الأسئلة المطروحة: ${askedCount}`;
         document.getElementById('correct-q-count-display').textContent = `الإجابات الصحيحة: ${correctCount}`;
 
-        const isPassed = (correctCount >= 2);
-        const compSelect = document.getElementById('comp-score');
-        const statusIndicator = document.getElementById('auto-status-indicator');
+        const autoStatus = document.getElementById('auto-status-indicator');
+        const selectScore = document.getElementById('comp-score');
 
-        if (isPassed) {
-            compSelect.value = '1';
-            statusIndicator.textContent = 'متحكم (1) ✔️';
-            statusIndicator.className = 'status-1 text-sm px-3 py-1';
+        if (correctCount >= 2) {
+            autoStatus.textContent = 'متحكم (1) ✔️';
+            autoStatus.className = 'status-1 text-sm px-3 py-1';
+            selectScore.value = "1";
         } else {
-            compSelect.value = '0';
-            statusIndicator.textContent = 'غير متحكم (0) ❌';
-            statusIndicator.className = 'status-0 text-sm px-3 py-1';
+            autoStatus.textContent = 'غير متحكم (0) ❌';
+            autoStatus.className = 'status-0 text-sm px-3 py-1';
+            selectScore.value = "0";
         }
     }
 
     function saveAndProceedStage() {
+        if (!currentStudent) return;
+
         const config = STAGE_CONFIG[currentStageKey];
+        const warnBox = document.getElementById('validation-warning');
+        const warnText = document.getElementById('validation-warning-text');
 
         if (config.type === 'fluency') {
             if (isReadCompleted === null) {
-                document.getElementById('validation-warning').classList.remove('hidden');
+                warnText.textContent = "⚠️ ينبغي تحديد حالة قراءة النص أولاً بالتأشير على: (أكمل القراءة) أو (لم يكمل القراءة)!";
+                warnBox.classList.remove('hidden');
                 return;
             }
 
+            if (!isTimerFinished && timerSeconds > 0) {
+                warnText.textContent = `⚠️ لا يمكن الانتقال حتى يكتمل وقت القراءة (60 ثانية) أو الضغط على "تجاوز العداد"! (المتبقي: ${timerSeconds} ثانية)`;
+                warnBox.classList.remove('hidden');
+                return;
+            }
+
+            warnBox.classList.add('hidden');
+
             const errors = document.querySelectorAll('#word-container .word-item.error').length;
             const wordsRead = parseInt(document.getElementById('words-read').value) || 0;
-            const correct = Math.max(0, wordsRead - errors);
-            const passed = (isReadCompleted === true) && (correct >= config.targetWords);
+            const correctWords = Math.max(0, wordsRead - errors);
 
-            currentStudent.scores[currentStageKey] = passed ? '1' : '0';
+            const score = (isReadCompleted === true && correctWords >= config.targetWords) ? 1 : 0;
+            currentStudent.scores[config.code] = score;
 
-            // Determination of Next Stage based on Official TARL Decision Flow
-            if (currentStageKey === 'LTC') {
-                if (passed) {
-                    loadStage('CTC');
-                } else {
-                    currentStudent.scores['CTC'] = '-';
-                    loadStage('LP');
-                }
-            } else if (currentStageKey === 'LP') {
-                if (passed) {
-                    loadStage('CP');
-                } else {
-                    currentStudent.scores['CP'] = '-';
-                    currentStudent.scores['LTM'] = '-';
-                    currentStudent.scores['CTM'] = '-';
-                    finalizeStudentAssessment('اللبنة 1', 'غير متحكم في طلاقة الفقرة (LP=0)');
-                }
-            } else if (currentStageKey === 'LTM') {
-                if (passed) {
-                    loadStage('CTM');
-                } else {
-                    currentStudent.scores['CTM'] = '-';
-                    finalizeStudentAssessment('اللبنة 2', 'متحكم في النص القصير لكنه غير متحكم في طلاقة النص المتوسط (LTM=0)');
-                }
-            }
+            saveStudentToDatabase();
+            determineOfficialNextStage(config.code, score);
+
         } else {
-            // Comprehension Stage Processing
-            const askedCount = currentQuestionsState.filter(q => q.asked).length;
-            const correctCount = currentQuestionsState.filter(q => q.asked && q.correct).length;
-            const passed = (correctCount >= 2);
+            const score = parseInt(document.getElementById('comp-score').value) || 0;
+            currentStudent.scores[config.code] = score;
 
-            currentStudent.scores[currentStageKey] = passed ? '1' : '0';
-
-            if (currentStageKey === 'CTC') {
-                if (passed) {
-                    loadStage('LTM');
-                } else {
-                    loadStage('LP');
-                }
-            } else if (currentStageKey === 'CP') {
-                if (passed) {
-                    finalizeStudentAssessment('اللبنة 2', 'تمت موضعتُه في اللبنة 2 لاستيفاء شروط الفقرة (CP=1)');
-                } else {
-                    finalizeStudentAssessment('اللبنة 1', 'تمت موضعتُه في اللبنة 1 لعدم التحكم في فهم الفقرة (CP=0)');
-                }
-            } else if (currentStageKey === 'CTM') {
-                if (passed) {
-                    finalizeStudentAssessment('اللبنة 3', 'متحكم في النص المتوسط طلاقة وفهماً (CTM=1)');
-                } else {
-                    finalizeStudentAssessment('اللبنة 2', 'غير متحكم في فهم النص المتوسط (CTM=0)');
-                }
-            }
-        }
-    }
-
-    function goToNextStageDirectly() {
-        const idx = STAGE_KEYS.indexOf(currentStageKey);
-        if (idx < STAGE_KEYS.length - 1) {
-            loadStage(STAGE_KEYS[idx + 1]);
+            saveStudentToDatabase();
+            determineOfficialNextStage(config.code, score);
         }
     }
 
     function goToPreviousStage() {
-        const idx = STAGE_KEYS.indexOf(currentStageKey);
-        if (idx > 0) {
-            loadStage(STAGE_KEYS[idx - 1]);
+        const curIndex = STAGE_KEYS.indexOf(currentStageKey);
+        if (curIndex > 0) {
+            loadStage(STAGE_KEYS[curIndex - 1]);
+        } else {
+            alert("أنت حالياً في المرحلة الأولى (LTC).");
         }
     }
 
-    function finalizeStudentAssessment(level, reason) {
-        currentStudent.finalLevel = level;
-        currentStudent.finalReason = reason;
+    function goToNextStageDirectly() {
+        const curIndex = STAGE_KEYS.indexOf(currentStageKey);
+        if (curIndex < STAGE_KEYS.length - 1) {
+            loadStage(STAGE_KEYS[curIndex + 1]);
+        } else {
+            alert("أنت في المرحلة الأخيرة (CTM). يمكنك حفظ النتيجة وتفريغ شبكة الموضعة.");
+        }
+    }
 
-        const existingIdx = studentsList.findIndex(s => s.id === currentStudent.id);
-        if (existingIdx >= 0) {
-            studentsList[existingIdx] = currentStudent;
+    function saveStudentToDatabase() {
+        const idx = studentsList.findIndex(s => s.id === currentStudent.id);
+        if (idx >= 0) {
+            studentsList[idx] = currentStudent;
         } else {
             studentsList.push(currentStudent);
         }
-
         localStorage.setItem('ar_tarl_students_2026', JSON.stringify(studentsList));
-        document.getElementById('header-student-count').textContent = studentsList.length;
+    }
 
+    function determineOfficialNextStage(stageCode, score) {
+        if (stageCode === 'LTC') {
+            if (score === 0) {
+                currentStageKey = 'LP';
+                currentSubIndex = 0;
+                loadStage('LP');
+            } else {
+                currentStageKey = 'CTC';
+                currentSubIndex = 0;
+                loadStage('CTC');
+            }
+        } else if (stageCode === 'CTC') {
+            if (score === 0) {
+                finalizeAssessment("اللبنة 1", "تحكم في طلاقة النص القصير ولم يتحكم بالفهم المباشر (اللبنة 1)");
+            } else {
+                currentStageKey = 'LTM';
+                currentSubIndex = 0;
+                loadStage('LTM');
+            }
+        } else if (stageCode === 'LP') {
+            currentStageKey = 'CP';
+            currentSubIndex = 0;
+            loadStage('CP');
+        } else if (stageCode === 'CP') {
+            const lpScore = currentStudent.scores.LP;
+            const reason = score === 1 
+                ? "تحكم في قراءة الفقرة وفهمها المباشر (اللبنة 1)" 
+                : (lpScore === 1 ? "تحكم في قراءة الفقرة ولم يتحكم بالفهم (اللبنة 1)" : "لم يتحكم في طلاقة قراءة الفقرة (اللبنة 1)");
+            finalizeAssessment("اللبنة 1", reason);
+        } else if (stageCode === 'LTM') {
+            if (score === 0) {
+                finalizeAssessment("اللبنة 2", "تحكم في النص القصير ولم يتحكم بطلاقة النص المتوسط (اللبنة 2)");
+            } else {
+                currentStageKey = 'CTM';
+                currentSubIndex = 0;
+                loadStage('CTM');
+            }
+        } else if (stageCode === 'CTM') {
+            if (score === 1) {
+                finalizeAssessment("اللبنة 3", "تحكم في طلاقة النص المتوسط وفهمه المباشر (اللبنة 3)");
+            } else {
+                finalizeAssessment("اللبنة 2", "تحكم في طلاقة النص المتوسط ولم يتحكم بالفهم المباشر (اللبنة 2)");
+            }
+        }
+    }
+
+    function finalizeAssessment(level, reason) {
+        currentStudent.finalLevel = level;
+        currentStudent.finalReason = reason;
+
+        lastEvaluatedNote = `📌 <strong>${currentStudent.name} (${currentStudent.studentClass})</strong>: ${reason}`;
+
+        saveStudentToDatabase();
         showCollectiveGridDirectly();
-        highlightStudentDetailsInTable(currentStudent.id);
-    }
-
-    function renderCollectiveGrid() {
-        const tbody = document.getElementById('collective-grid-body');
-        tbody.innerHTML = '';
-
-        const filterClass = document.getElementById('filter-class').value;
-        const filteredList = filterClass === 'ALL' 
-            ? studentsList 
-            : studentsList.filter(s => s.studentClass === filterClass);
-
-        let countLtc = 0, countCtc = 0, countLp = 0, countCp = 0, countLtm = 0, countCtm = 0;
-
-        filteredList.forEach((s, idx) => {
-            if (s.scores.LTC === '1') countLtc++;
-            if (s.scores.CTC === '1') countCtc++;
-            if (s.scores.LP === '1') countLp++;
-            if (s.scores.CP === '1') countCp++;
-            if (s.scores.LTM === '1') countLtm++;
-            if (s.scores.CTM === '1') countCtm++;
-
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${idx + 1}</td>
-                <td class="font-bold text-right pr-2">${s.name}</td>
-                <td>${s.studentClass}</td>
-                <td>${renderScoreBadge(s.scores.LTC)}</td>
-                <td>${renderScoreBadge(s.scores.CTC)}</td>
-                <td>${renderScoreBadge(s.scores.LP)}</td>
-                <td>${renderScoreBadge(s.scores.CP)}</td>
-                <td>${renderScoreBadge(s.scores.LTM)}</td>
-                <td>${renderScoreBadge(s.scores.CTM)}</td>
-                <td class="font-extrabold text-sky-900 bg-sky-50/50">${s.finalLevel || '-'}</td>
-                <td class="no-print space-x-1 space-x-reverse">
-                    <button onclick="openEditModal(${s.id})" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded text-[11px]">✏️</button>
-                    <button onclick="deleteStudent(${s.id})" class="bg-rose-100 hover:bg-rose-200 text-rose-900 font-bold px-2 py-0.5 rounded text-[11px]">🗑️</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-
-        document.getElementById('stat-total').textContent = filteredList.length;
-        document.getElementById('stat-ltc').textContent = countLtc;
-        document.getElementById('stat-ctc').textContent = countCtc;
-        document.getElementById('stat-lp').textContent = countLp;
-        document.getElementById('stat-cp').textContent = countCp;
-        document.getElementById('stat-ltm').textContent = countLtm;
-        document.getElementById('stat-ctm').textContent = countCtm;
-    }
-
-    function renderScoreBadge(score) {
-        if (score === '1') return '<span class="status-1">1</span>';
-        if (score === '0') return '<span class="status-0">0</span>';
-        return '<span class="status-na">-</span>';
-    }
-
-    function highlightStudentDetailsInTable(studentId) {
-        const student = studentsList.find(s => s.id === studentId);
-        if (!student) return;
-
-        const detailsBox = document.getElementById('teacher-details-box');
-        const detailsList = document.getElementById('teacher-details-list');
-
-        detailsBox.classList.remove('hidden');
-        detailsList.innerHTML = `
-            <div>👤 <strong>التلميذ(ة):</strong> ${student.name} (${student.studentClass})</div>
-            <div>🏆 <strong>اللبنة المستحقة:</strong> <span class="bg-amber-200 text-amber-900 px-2 py-0.5 rounded font-black">${student.finalLevel}</span></div>
-            <div>📝 <strong>مبرر القرار البيداغوجي:</strong> ${student.finalReason || 'تم تحديد اللبنة بناءً على نتائج الاختبارات المنجزة.'}</div>
-        `;
     }
 
     function openEditModal(studentId) {
         editingStudentId = studentId;
-        const student = studentsList.find(s => s.id === studentId);
-        if (!student) return;
+        const st = studentsList.find(s => s.id === studentId);
+        if (!st) return;
 
-        document.getElementById('edit-modal-student-name').textContent = `${student.name} (${student.studentClass})`;
-        document.getElementById('edit-score-ltc').value = student.scores.LTC;
-        document.getElementById('edit-score-ctc').value = student.scores.CTC;
-        document.getElementById('edit-score-lp').value = student.scores.LP;
-        document.getElementById('edit-score-cp').value = student.scores.CP;
-        document.getElementById('edit-score-ltm').value = student.scores.LTM;
-        document.getElementById('edit-score-ctm').value = student.scores.CTM;
-        document.getElementById('edit-final-level').value = student.finalLevel || 'اللبنة 1';
+        document.getElementById('edit-modal-student-name').textContent = `${st.name} (${st.studentClass})`;
+        document.getElementById('edit-score-ltc').value = st.scores.LTC !== undefined ? st.scores.LTC : '-';
+        document.getElementById('edit-score-ctc').value = st.scores.CTC !== undefined ? st.scores.CTC : '-';
+        document.getElementById('edit-score-lp').value  = st.scores.LP  !== undefined ? st.scores.LP  : '-';
+        document.getElementById('edit-score-cp').value  = st.scores.CP  !== undefined ? st.scores.CP  : '-';
+        document.getElementById('edit-score-ltm').value = st.scores.LTM !== undefined ? st.scores.LTM : '-';
+        document.getElementById('edit-score-ctm').value = st.scores.CTM !== undefined ? st.scores.CTM : '-';
+        document.getElementById('edit-final-level').value = st.finalLevel || 'اللبنة 1';
 
         document.getElementById('edit-student-modal').classList.remove('hidden');
     }
@@ -1462,73 +1492,205 @@
 
     function saveStudentModalEdit() {
         if (!editingStudentId) return;
-        const student = studentsList.find(s => s.id === editingStudentId);
-        if (student) {
-            student.scores.LTC = document.getElementById('edit-score-ltc').value;
-            student.scores.CTC = document.getElementById('edit-score-ctc').value;
-            student.scores.LP = document.getElementById('edit-score-lp').value;
-            student.scores.CP = document.getElementById('edit-score-cp').value;
-            student.scores.LTM = document.getElementById('edit-score-ltm').value;
-            student.scores.CTM = document.getElementById('edit-score-ctm').value;
-            student.finalLevel = document.getElementById('edit-final-level').value;
+        const st = studentsList.find(s => s.id === editingStudentId);
+        if (!st) return;
 
-            localStorage.setItem('ar_tarl_students_2026', JSON.stringify(studentsList));
-            renderCollectiveGrid();
-        }
+        const valOrNum = (val) => (val === "1" ? 1 : (val === "0" ? 0 : "-"));
+
+        st.scores.LTC = valOrNum(document.getElementById('edit-score-ltc').value);
+        st.scores.CTC = valOrNum(document.getElementById('edit-score-ctc').value);
+        st.scores.LP  = valOrNum(document.getElementById('edit-score-lp').value);
+        st.scores.CP  = valOrNum(document.getElementById('edit-score-cp').value);
+        st.scores.LTM = valOrNum(document.getElementById('edit-score-ltm').value);
+        st.scores.CTM = valOrNum(document.getElementById('edit-score-ctm').value);
+
+        st.finalLevel = document.getElementById('edit-final-level').value;
+
+        localStorage.setItem('ar_tarl_students_2026', JSON.stringify(studentsList));
         closeEditModal();
+        renderCollectiveGrid();
     }
 
-    function deleteStudent(studentId) {
-        if (confirm("هل أنت تأكد من رغبتك في حذف هذا التلميذ(ة) من الشبكة؟")) {
-            studentsList = studentsList.filter(s => s.id !== studentId);
+    function renderCollectiveGrid() {
+        const filterClass = document.getElementById('filter-class').value;
+        const tbody = document.getElementById('collective-grid-body');
+        tbody.innerHTML = '';
+
+        let filtered = studentsList;
+        if (filterClass !== 'ALL') {
+            filtered = studentsList.filter(s => s.studentClass === filterClass);
+        }
+
+        document.getElementById('header-student-count').textContent = studentsList.length;
+
+        document.getElementById('stat-total').textContent = filtered.length;
+        document.getElementById('stat-ltc').textContent = filtered.filter(s => s.scores.LTC === 1).length;
+        document.getElementById('stat-ctc').textContent = filtered.filter(s => s.scores.CTC === 1).length;
+        document.getElementById('stat-lp').textContent = filtered.filter(s => s.scores.LP === 1).length;
+        document.getElementById('stat-cp').textContent = filtered.filter(s => s.scores.CP === 1).length;
+        document.getElementById('stat-ltm').textContent = filtered.filter(s => s.scores.LTM === 1).length;
+        document.getElementById('stat-ctm').textContent = filtered.filter(s => s.scores.CTM === 1).length;
+
+        const teacherBox = document.getElementById('teacher-details-box');
+        const teacherList = document.getElementById('teacher-details-list');
+
+        if (lastEvaluatedNote) {
+            teacherList.innerHTML = lastEvaluatedNote;
+            teacherBox.classList.remove('hidden');
+        } else {
+            teacherList.innerHTML = '';
+            teacherBox.classList.add('hidden');
+        }
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="11" class="py-6 text-slate-400 font-semibold text-center">لا توجد بيانات مسجلة حتى الآن. انقر على "إضافة تلميذ جديد" لبدء التقييم.</td></tr>`;
+            return;
+        }
+
+        filtered.forEach((student, index) => {
+            const tr = document.createElement('tr');
+
+            const renderBadge = (val) => {
+                if (val === 1) return `<span class="status-1">1</span>`;
+                if (val === 0) return `<span class="status-0">0</span>`;
+                return `<span class="status-na">-</span>`;
+            };
+
+            tr.innerHTML = `
+                <td class="font-bold text-slate-600">${index + 1}</td>
+                <td class="font-bold text-slate-800 text-right pr-2">${student.name}</td>
+                <td class="font-semibold text-slate-700">${student.studentClass}</td>
+                <td>${renderBadge(student.scores.LTC)}</td>
+                <td>${renderBadge(student.scores.CTC)}</td>
+                <td>${renderBadge(student.scores.LP)}</td>
+                <td>${renderBadge(student.scores.CP)}</td>
+                <td>${renderBadge(student.scores.LTM)}</td>
+                <td>${renderBadge(student.scores.CTM)}</td>
+                <td><span class="font-bold text-sky-900 text-xs bg-sky-100 px-2.5 py-1 rounded">${student.finalLevel || '-'}</span></td>
+                <td class="no-print">
+                    <div class="flex items-center justify-center gap-1">
+                        <button onclick="openEditModal(${student.id})" class="bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold px-2 py-1 rounded text-xs transition" title="تعديل النقط والمعطيات">
+                            ✏️ تعديل
+                        </button>
+                        <button onclick="deleteStudent(${student.id})" class="bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold px-2 py-1 rounded text-xs transition" title="حذف التلميذ">
+                            🗑️ حذف
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function exportToExcelFormatted() {
+        if (studentsList.length === 0) return;
+
+        const dir = document.getElementById('info-directorate-main').value || 'مديرية اشتوكة آيت باها';
+        const sch = document.getElementById('info-school-main').value || 'الثانوية الإعدادية أنس بن مالك';
+        const tch = document.getElementById('info-teacher-main').value || 'غير محدد';
+        const filterClass = document.getElementById('filter-class').value;
+
+        let filtered = studentsList;
+        if (filterClass !== 'ALL') {
+            filtered = studentsList.filter(s => s.studentClass === filterClass);
+        }
+
+        let rowsHtml = '';
+        filtered.forEach((st, idx) => {
+            rowsHtml += `
+                <tr>
+                    <td style="border:1px solid #b3e5fc; text-align:center;">${idx + 1}</td>
+                    <td style="border:1px solid #b3e5fc; text-align:right;">${st.name}</td>
+                    <td class="txt" style="border:1px solid #b3e5fc; text-align:center; mso-number-format:'\\@';" x:str="${st.studentClass}">${st.studentClass}</td>
+                    <td style="border:1px solid #b3e5fc; text-align:center;">${st.scores.LTC !== undefined ? st.scores.LTC : '-'}</td>
+                    <td style="border:1px solid #b3e5fc; text-align:center;">${st.scores.CTC !== undefined ? st.scores.CTC : '-'}</td>
+                    <td style="border:1px solid #b3e5fc; text-align:center;">${st.scores.LP !== undefined ? st.scores.LP : '-'}</td>
+                    <td style="border:1px solid #b3e5fc; text-align:center;">${st.scores.CP !== undefined ? st.scores.CP : '-'}</td>
+                    <td style="border:1px solid #b3e5fc; text-align:center;">${st.scores.LTM !== undefined ? st.scores.LTM : '-'}</td>
+                    <td style="border:1px solid #b3e5fc; text-align:center;">${st.scores.CTM !== undefined ? st.scores.CTM : '-'}</td>
+                    <td style="border:1px solid #b3e5fc; text-align:center; font-weight:bold;">${st.finalLevel || '-'}</td>
+                </tr>
+            `;
+        });
+
+        const excelTemplate = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+            <head>
+                <meta charset="UTF-8">
+                <!--[if gte mso 9]>
+                <xml>
+                 <x:ExcelWorkbook>
+                  <x:ExcelWorksheets>
+                   <x:ExcelWorksheet>
+                    <x:Name>شبكة التفريغ الجماعية</x:Name>
+                    <x:WorksheetOptions>
+                     <x:DisplayRightToLeft/>
+                    </x:WorksheetOptions>
+                   </x:ExcelWorksheet>
+                  </x:ExcelWorksheets>
+                 </x:ExcelWorkbook>
+                </xml>
+                <![endif]-->
+                <style>
+                    br { mso-data-placement: same-cell; }
+                    td { font-family: Arial, sans-serif; font-size: 10pt; vertical-align: middle; }
+                    .txt { mso-number-format: "\\@"; text-align: center; }
+                    th { background-color: #0288d1; color: white; font-bold: true; border: 1px solid #b3e5fc; }
+                </style>
+            </head>
+            <body>
+                <h2 style="text-align:center; color:#0288d1;">شبكة التفريغ الجماعية لروائز الموضعة - اللغة العربية (2026-2027)</h2>
+                <p style="text-align:center;"><b>المديرية الإقليمية:</b> ${dir} | <b>المؤسسة:</b> ${sch} | <b>الأستاذ(ة):</b> ${tch} | <b>تطوير:</b> ذ. إبراهيم السبكي</p>
+                <table border="1" style="border-collapse:collapse; width:100%;">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم التلميذ(ة) الكامل</th>
+                            <th>القسم</th>
+                            <th>LTC</th>
+                            <th>CTC</th>
+                            <th>LP</th>
+                            <th>CP</th>
+                            <th>LTM</th>
+                            <th>CTM</th>
+                            <th>اللبنة المستحقة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rowsHtml}
+                    </tbody>
+                </table>
+            </body>
+            </html>
+        `;
+
+        const blob = new Blob(['\ufeff' + excelTemplate], { type: 'application/vnd.ms-excel;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `شبكة_التفريغ_الجماعية_اللغة_العربية_${new Date().toISOString().slice(0, 10)}.xls`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function deleteStudent(id) {
+        if (confirm("هل أنت متأكد من حذف بيانات هذا التلميذ؟")) {
+            studentsList = studentsList.filter(s => s.id !== id);
             localStorage.setItem('ar_tarl_students_2026', JSON.stringify(studentsList));
-            document.getElementById('header-student-count').textContent = studentsList.length;
             renderCollectiveGrid();
         }
     }
 
     function confirmClearData() {
-        if (confirm("⚠️ تنبيه: هل أنت متأكد من مسح جميع بيانات التلاميذ المسجلة؟ لا يمكن التراجع عن هذا الإجراء!")) {
+        if (studentsList.length === 0) return;
+        if (confirm("هل أنت متأكد من مسح جميع بيانات التلاميذ المسجلة؟")) {
             studentsList = [];
+            lastEvaluatedNote = '';
             localStorage.removeItem('ar_tarl_students_2026');
-            document.getElementById('header-student-count').textContent = '0';
             renderCollectiveGrid();
         }
-    }
-
-    function exportToExcelFormatted() {
-        if (studentsList.length === 0) {
-            alert("لا توجد بيانات متاحة للتصدير حالياً.");
-            return;
-        }
-
-        let csvContent = "\uFEFF"; // UTF-8 BOM
-        csvContent += "الرقم,اسم التلميذ(ة),القسم,LTC,CTC,LP,CP,LTM,CTM,اللبنة المستحقة\n";
-
-        studentsList.forEach((s, idx) => {
-            const row = [
-                idx + 1,
-                `"${s.name}"`,
-                `"${s.studentClass}"`,
-                s.scores.LTC,
-                s.scores.CTC,
-                s.scores.LP,
-                s.scores.CP,
-                s.scores.LTM,
-                s.scores.CTM,
-                `"${s.finalLevel}"`
-            ];
-            csvContent += row.join(",") + "\n";
-        });
-
-        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-        const link = document.createElement("a");
-        const url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", `شبكة_روائز_الموضعة_اللغة_العربية_2026_2027.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
     }
 </script>
 </body>
