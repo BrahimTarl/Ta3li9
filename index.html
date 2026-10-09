@@ -346,7 +346,7 @@
                     <div>الكلمات الصحيحة السليمة: <span id="correct-count" class="text-emerald-700 font-black text-sm px-2.5 py-0.5 bg-emerald-50 rounded-md border border-emerald-200">0</span></div>
                     <div class="flex items-center gap-1">
                         <span>الحكم التلقائي:</span>
-                        <span id="auto-fluency-status" class="status-0 text-xs px-2.5 py-1">في انتظار انتهاء الـ 60 ثانية</span>
+                        <span id="auto-fluency-status" class="status-0 text-xs px-2.5 py-1">في انتظار تحديد حالة القراءة</span>
                     </div>
                 </div>
             </div>
@@ -356,10 +356,10 @@
                 <div class="flex-1">
                     <div class="flex items-center gap-1 text-xs md:text-sm font-bold text-sky-900">
                         <span>🎯 الحكم التلقائي للمرحلة الحالية (<span id="stage-code-display">LTC</span>):</span>
-                        <span id="stage-status-badge" class="bg-slate-200 text-slate-700 text-xs px-2.5 py-0.5 rounded-md font-bold">في انتظار انتهاء 60 ثانية والضغط على (أكمل / لم يكمل القراءة)</span>
+                        <span id="stage-status-badge" class="bg-slate-200 text-slate-700 text-xs px-2.5 py-0.5 rounded-md font-bold">في انتظار الضغط على (أكمل / لم يكمل القراءة)</span>
                     </div>
                     <div id="stage-action-hint" class="text-xs text-sky-700 font-bold mt-1 flex items-center gap-1">
-                        ⚡ في انتظار انتهاء الـ 60 ثانية واختيار حالة القراءة لتحديد المرحلة الموالية.
+                        ⚡ في انتظار اختيار حالة القراءة لتحديد المرحلة الموالية.
                     </div>
                 </div>
             </div>
@@ -832,9 +832,9 @@
 
             document.getElementById('stage-instruction').innerHTML = `
                 <strong>الموجهات الرسمية للطلاقة:</strong> يقرأ المتعلم النص في دقيقة واحدة (60 ثانية).
-                عتبة التحكم المطلوبة: <strong>${config.targetWords} كلمة صحيحة سليمة</strong> على الأقل.
+                شرط التحكم: <strong>إتمام قراءة النص كاملًا</strong> مع تحقيق <strong>${config.targetWords} كلمة صحيحة سليمة</strong> على الأقل في الدقيقة.
             `;
-            document.getElementById('stage-target-hint').textContent = `🎯 العتبة المطلوبة لهذه المرحلة: ${config.targetWords} كلمة صحيحة في الدقيقة.`;
+            document.getElementById('stage-target-hint').textContent = `🎯 العتبة المطلوبة لهذه المرحلة: إتمام القراءة وتجاوز ${config.targetWords} كلمة صحيحة في الدقيقة.`;
 
             const wordContainer = document.getElementById('word-container');
             wordContainer.innerHTML = '';
@@ -848,6 +848,12 @@
             });
 
             document.getElementById('words-read').value = words.length;
+
+            const btnDone = document.getElementById('btn-read-completed');
+            const btnNot = document.getElementById('btn-read-incomplete');
+            btnDone.className = 'bg-white border-2 border-emerald-500 text-emerald-700 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 hover:bg-emerald-50 transition';
+            btnNot.className = 'bg-white border-2 border-amber-500 text-amber-700 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 hover:bg-amber-50 transition';
+
             updateCounts();
 
         } else {
@@ -899,21 +905,20 @@
         const stageStatusBadge = document.getElementById('stage-status-badge');
         const stageActionHint = document.getElementById('stage-action-hint');
 
-        const isPassed = correct >= config.targetWords;
-
-        if (isPassed) {
-            autoFluencyStatus.textContent = 'متحكم (1)';
-            autoFluencyStatus.className = 'status-1 text-xs px-2.5 py-1';
-        } else {
-            autoFluencyStatus.textContent = 'غير متحكم (0)';
-            autoFluencyStatus.className = 'status-0 text-xs px-2.5 py-1';
-        }
+        // التقييم المشروط بإتمام القراءة وبلوغ العتبة
+        const isPassed = (isReadCompleted === true) && (correct >= config.targetWords);
 
         if (isReadCompleted === null) {
+            autoFluencyStatus.textContent = 'في انتظار تحديد حالة القراءة';
+            autoFluencyStatus.className = 'status-0 text-xs px-2.5 py-1 bg-slate-200 text-slate-700';
+
             stageStatusBadge.textContent = 'في انتظار الضغط على (أكمل / لم يكمل القراءة)';
             stageStatusBadge.className = 'bg-slate-200 text-slate-700 text-xs px-2.5 py-0.5 rounded-md font-bold';
-            stageActionHint.innerHTML = '⚡ في انتظار الضغط على حالة القراءة لتحديد المرحلة الموالية.';
+            stageActionHint.innerHTML = '⚡ في انتظار اختيار حالة القراءة لتحديد المرحلة الموالية.';
         } else if (isPassed) {
+            autoFluencyStatus.textContent = 'متحكم (1) ✔️';
+            autoFluencyStatus.className = 'status-1 text-xs px-2.5 py-1';
+
             stageStatusBadge.textContent = 'متحكم (1) ✔️';
             stageStatusBadge.className = 'bg-emerald-600 text-white text-xs px-2.5 py-0.5 rounded-md font-bold shadow-sm';
             
@@ -925,15 +930,24 @@
                 stageActionHint.innerHTML = '⚡ سيتم الانتقال إلى المرحلة 6: فهم النص المتوسط (CTM).';
             }
         } else {
+            autoFluencyStatus.textContent = 'غير متحكم (0) ❌';
+            autoFluencyStatus.className = 'status-0 text-xs px-2.5 py-1';
+
             stageStatusBadge.textContent = 'غير متحكم (0) ❌';
             stageStatusBadge.className = 'bg-rose-600 text-white text-xs px-2.5 py-0.5 rounded-md font-bold shadow-sm';
             
+            if (isReadCompleted === false) {
+                stageActionHint.innerHTML = '⚠️ لم يكمل قراءة النص؛ وبالتالي يعتبر غير متحكم في الطلاقة.';
+            } else if (correct < config.targetWords) {
+                stageActionHint.innerHTML = `⚠️ لم يتجاوز العتبة المطلوبة (${config.targetWords} كلمة)؛ وبالتالي يعتبر غير متحكم.`;
+            }
+
             if (currentStageKey === 'LTC') {
-                stageActionHint.innerHTML = '⚡ سيتم الانتقال إلى المرحلة 3: طلاقة قراءة الفقرة (LP).';
+                stageActionHint.innerHTML += ' ⬅️ الانتقال إلى المرحلة 3: طلاقة الفقرة (LP).';
             } else if (currentStageKey === 'LP') {
-                stageActionHint.innerHTML = '⚡ سيتم الانتقال إلى المرحلة 4: فهم الفقرة (CP).';
+                stageActionHint.innerHTML += ' ⬅️ الانتقال إلى المرحلة 4: فهم الفقرة (CP).';
             } else if (currentStageKey === 'LTM') {
-                stageActionHint.innerHTML = '⚡ التثبيت في اللبنة 2 (عدم التحكم في طلاقة النص المتوسط).';
+                stageActionHint.innerHTML += ' ⬅️ التثبيت في اللبنة 2.';
             }
         }
     }
@@ -1076,7 +1090,8 @@
             const wordsRead = parseInt(document.getElementById('words-read').value) || 0;
             const correctWords = Math.max(0, wordsRead - errors);
 
-            score = (correctWords >= config.targetWords) ? 1 : 0;
+            // اشتراط إتمام القراءة وبلوغ العتبة المطلوبة
+            score = (isReadCompleted === true && correctWords >= config.targetWords) ? 1 : 0;
             currentStudent.scores[config.code] = score;
 
         } else {
@@ -1320,7 +1335,7 @@
 
     function confirmClearData() {
         if (studentsList.length === 0) return;
-        if (confirm("هل أنت تأكد من مسح جميع بيانات التلاميذ المسجلة؟")) {
+        if (confirm("هل أنت متأكد من مسح جميع بيانات التلاميذ المسجلة؟")) {
             studentsList = [];
             lastEvaluatedNote = '';
             localStorage.removeItem('ar_tarl_students_2026');
